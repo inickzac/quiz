@@ -1,0 +1,21 @@
+﻿
+<h3>
+    <font color="#0026ff">
+        @ViewData["question"]
+    </font>
+</h3>
+
+
+<style>
+    .colortext{
+        background-color: #ffffff; /* Цвет фона */
+        border: 3px solid @ViewData["Color"];
+        color: #000000; /* Цвет текста */
+    }
+</style>
+
+
+<form method="get" action="/Home/Index">
+    <input type="text" readonly class="colortext" name="Answer" value=@ViewData["Answer"] />
+    <input type="submit" value="Return" />
+</form>
