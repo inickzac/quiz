@@ -19,15 +19,19 @@
 <script>
 
     btn.onclick = function () {
-        var model = @Html.Raw(Json.Serialize(Model));
-        var ans = model.optionList.find(x => x.isAnswer);
-        $("#" + ans.id).css("border", "1px solid green");
+        $.ajax({
+            type: "GET",
+            url: "/SingleSelectionQuestion/FindAnswer",
+            data: { 'idQuestion': '@Model.Id' },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (obj) {
+                $("#" + obj.id).css("border", "2px solid green");
+            }
+        });
 
-        var r = document.getElementsByTagName('input');
-        for (var i in r)
-            if (r[i].type == 'radio' && r[i].name == 'myradio')
-                r[i].disabled = true;
-    
+        document.getElementsByName('myradio')
+            .forEach(function (x) { x.disabled = true; });
     }
 
 </script>

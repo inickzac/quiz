@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Teams.Domain;
 using Teams.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Teams.Controllers
 {
     public class SingleSelectionQuestionController : Controller
     {
-        private ApplicationDbContext DbContext { get; set; }
-        public SingleSelectionQuestionController(ApplicationDbContext dbContext)
+        private IApplicationDbContext DbContext { get; set; }
+        public SingleSelectionQuestionController(IApplicationDbContext dbContext)
         {
             DbContext = dbContext;
         }
@@ -21,15 +22,17 @@ namespace Teams.Controllers
         }
         public IActionResult ShowQuestion(Guid id)
         {
-            var options = new List<QuestionOption> { new QuestionOption(5, "the first option", false),
-                        new QuestionOption(6, "the second option", false),
-                        new QuestionOption(7, "the third option", true)};
-            var temp = new SingleSelectionQuestion("the question", options);
-
-            //var question = DbContext.SingleSelectionQuestions.FirstOrDefault(i => i.Id == id);
-            //question.InitOptionList(options);
-
-            return View(temp);
+            var question = DbContext.SingleSelectionQuestions.Include(q => q.OptionList)
+                .FirstOrDefault(i => i.Id == id);
+            return View(question);
+        }
+        [HttpGet]
+        public JsonResult FindAnswer(Guid idQuestion)
+        {
+            var question = DbContext.SingleSelectionQuestions.Include(q => q.OptionList)
+                .FirstOrDefault(i => i.Id == idQuestion);
+            var answer = question.OptionList.FirstOrDefault(i => i.IsAnswer == true);
+            return Json(answer);
         }
     }
 }

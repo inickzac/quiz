@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Teams.Domain
 {
@@ -9,13 +10,6 @@ namespace Teams.Domain
         {
             OptionList = new List<QuestionOption>();
         }
-        public SingleSelectionQuestion(string text, List<QuestionOption> options): base(text)
-        {
-            OptionList = options;
-        }
-        public void InitOptionList(List<QuestionOption> optionList)
-        {
-            OptionList = optionList;
-        }
+       
     }
 }
