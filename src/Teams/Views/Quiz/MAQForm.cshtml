@@ -1,0 +1,58 @@
+﻿@model MAQuestionModel
+@{
+    ViewData["Title"] = "QuestForm";
+}
+<style>
+    div.border{
+        border: 5px;
+        border-color: green;
+    }
+</style>
+<h2>@(Model.Text)</h2>
+@using (Html.BeginForm("MAQForm", "Quiz", FormMethod.Post))
+{
+    <input readonly name="Id" value="@Model.ID" />
+    <div id="main_tree">
+        @for (int i = 0; i < Model.Answers.Count; i++)
+        {
+            <div id="div[@i] "name="div">
+                <input type="checkbox" id="answer[@i] "name="answer" value="@i" />
+                <label for="answer">@Model.Answers[i].text</label>
+            </div>
+        }
+    </div>
+    if (Model.ChosenOptions is null)
+    {
+        <input type="submit" name="check">
+    }
+    else
+    {
+        <script>
+            var x = document.getElementsByName("answer");
+            x.forEach(a => a.disabled = true);
+            var checks = @Html.Raw(Json.Serialize(Model.ChosenOptions));
+            var cnt = @Html.Raw(Json.Serialize(Model.Answers.Count));
+            var rights = @Html.Raw(Json.Serialize(getRightAns()));
+            for (var i = 0; i < checks.length; i++)
+            {
+                x[checks[i]].checked = true;
+            }
+            var divs = document.getElementsByName("div");
+            for (var i = 0; i < rights.length; i++)
+            {
+                if (rights[i]) divs[i].setAttribute("class", "border");
+            }
+        </script>
+    }
+}
+@{ 
+    bool[] getRightAns()
+    {
+        bool[] b = new bool[Model.Answers.Count];
+        for (int i = 0; i < b.Length; i++)
+        {
+            b[i] = Model.Answers[i].isRight;
+        }
+        return b;
+    }
+}
