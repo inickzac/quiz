@@ -17,7 +17,7 @@ namespace Teams.Controllers
         {
             _singleRepository = singleRepository;
         }
-        [Route("SingleSelectionQuestion/{id?}")]
+        [Route("[Controller]/{id?}")]
         public IActionResult Index(Guid id)
         {
             var question = _singleRepository.Get(id);
