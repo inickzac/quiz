@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Question";
+}
+
+<style>
+    .colortext {
+        background-color: #fffe; /* Цвет фона */
+        border: 3px solid @ViewData["color"];
+        color: #000000; /* Цвет текста */
+    }
+</style>
+
+<div>
+    <h3>
+        <font color="#0026ff">
+            @ViewData["question"]
+        </font>
+    </h3>
+
+    <input type="text" readonly class="colortext" name="answer" value=@ViewBag.Answer />
+</div>
