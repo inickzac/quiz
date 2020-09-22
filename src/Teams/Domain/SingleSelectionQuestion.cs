@@ -1,15 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Teams.Domain
 {
     public class SingleSelectionQuestion : Question
     {
-        public List<QuestionOption> OptionList { get; private set; }
+        private List<SingleSelectionQuestionOption> options;
+        public IReadOnlyCollection<SingleSelectionQuestionOption> Options => options.ToList();
         public SingleSelectionQuestion(string text) : base(text)
         {
-            OptionList = new List<QuestionOption>();
+            options = new List<SingleSelectionQuestionOption>();
         }
-       
+        public SingleSelectionQuestionOption GetRightAnswer()
+        {
+            var answer = this.Options.FirstOrDefault(i => i.IsAnswer == true);
+            return answer;
+        }
     }
 }

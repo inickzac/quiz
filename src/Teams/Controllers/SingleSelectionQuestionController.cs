@@ -6,32 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Teams.Domain;
 using Teams.Data;
 using Microsoft.EntityFrameworkCore;
+using Teams.Data.SingleSelectionQuestionRepos;
 
 namespace Teams.Controllers
 {
     public class SingleSelectionQuestionController : Controller
     {
-        private IApplicationDbContext DbContext { get; set; }
-        public SingleSelectionQuestionController(IApplicationDbContext dbContext)
+        private ISingleSelectionQuestionRepository _singleRepository { get; set; }
+        public SingleSelectionQuestionController(ISingleSelectionQuestionRepository singleRepository)
         {
-            DbContext = dbContext;
+            _singleRepository = singleRepository;
         }
-        public IActionResult Index()
+        [Route("SingleSelectionQuestion/{id?}")]
+        public IActionResult Index(Guid id)
         {
-            return View();
-        }
-        public IActionResult ShowQuestion(Guid id)
-        {
-            var question = DbContext.SingleSelectionQuestions.Include(q => q.OptionList)
-                .FirstOrDefault(i => i.Id == id);
+            var question = _singleRepository.Get(id);
+            if (question == null) return NotFound();
             return View(question);
         }
         [HttpGet]
-        public JsonResult FindAnswer(Guid idQuestion)
+        public JsonResult FindAnswer(Guid questionId)
         {
-            var question = DbContext.SingleSelectionQuestions.Include(q => q.OptionList)
-                .FirstOrDefault(i => i.Id == idQuestion);
-            var answer = question.OptionList.FirstOrDefault(i => i.IsAnswer == true);
+            var question = _singleRepository.Get(questionId);
+            var answer = question.GetRightAnswer();
             return Json(answer);
         }
     }
