@@ -19,6 +19,10 @@ namespace Teams.Domain
         }
         public void InitializeOptions(IEnumerable<SingleSelectionQuestionOption> options)
         {
+            if (options.Where(x => x.IsAnswer).Count() != 1)
+            {
+                throw new ArgumentException();
+            }
             _options = options.ToList();
         }
     }
