@@ -31,7 +31,9 @@ namespace Teams
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();          
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<ISingleSelectionQuestionRepository, SingleSelectionQuestionRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
