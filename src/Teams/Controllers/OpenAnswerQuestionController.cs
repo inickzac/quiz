@@ -6,74 +6,42 @@ using Teams.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Teams.Data;
 
-namespace EpamTesting.Controllers
+namespace Teams.Controllers
 {
     public class OpenAnswerQuestionController : Controller
     {
 
         ApplicationDbContext context;
-        static int idQuestion;
 
         public OpenAnswerQuestionController(ApplicationDbContext context)
         {
             this.context = context;
         }
 
-        public IActionResult Question(int? id)
+        public IActionResult Question(Guid id)
         {
-
-            int countQuestions = context.OpenAnswerQuestions.Count();
-
-            ViewData["id"] = id;
-
-            if (id == null || id < 1 || id > countQuestions)
+            OpenAnswerQuestion question = context.OpenAnswerQuestions.FirstOrDefault(x => x.Id == id);
+                                
+            if(question == null)
             {
-                return NotFound("Неверынй ввод ID");
-
+                return NotFound("Не найден элемент по данному Id");
             }
 
-            idQuestion = (int)id - 1;
-
-            IEnumerable<OpenAnswerQuestion>
-              lin_s = context.OpenAnswerQuestions.Skip(idQuestion).Take(1).ToList();
-            string question = lin_s.ElementAt(0).TextQuestion;
-
-
-            ViewData["question"] = question;
+            ViewData["id"] = id;
+            ViewData["question"] = question.Text;
 
             return View();
         }
 
 
-        public IActionResult Answer(string answer)
+        public IActionResult Answer(string answer, Guid id)
         {
-            IEnumerable<OpenAnswerQuestion>
-              lin_ss = context.OpenAnswerQuestions.Skip(idQuestion).Take(1).ToList();
-            string question = lin_ss.ElementAt(0).TextQuestion;
+            OpenAnswerQuestion question = context.OpenAnswerQuestions.FirstOrDefault(x => x.Id == id);
 
-
-            IEnumerable<OpenAnswerQuestion>
-            lin_s = context.OpenAnswerQuestions.Skip(idQuestion).Take(1).ToList();
-            string answerCorrect = lin_s.ElementAt(0).TextAnswer;
-
-
-            ViewData["question"] = question;
-            ViewData["id"] = idQuestion + 1;
-
-
-
-            ViewBag.Answer = answer;
-
-
-            if (answer == answerCorrect)
-            {
-                ViewData["color"] = "green";
-            }
-            else
-            {
-                ViewData["color"] = "red";
-            }
-
+            ViewData["question"] = question.Text;
+            ViewBag.Answer = answer;           
+            ViewData["color"] = question.CheckAnswer(answer);
+            
             return View();
         }
 

@@ -1,14 +1,20 @@
 ﻿@{
-    ViewData["Title"] = "Question";
+    ViewData["Title"] = "Answer";
 }
+    <script>
 
-<style>
-    .colortext {
-        background-color: #fffe; /* Цвет фона */
-        border: 3px solid @ViewData["color"];
-        color: #000000; /* Цвет текста */
-    }
-</style>
+        window.onload = function () {
+            
+            var isTrue = '@ViewData["color"]' == "True";
+            alert('alert:  ' + isTrue)
+            if (isTrue) 
+                $("#colorChange").css("border", "3px solid green")
+            else
+                $("#colorChange").css("border", "3px solid red")
+
+        }
+
+    </script>
 
 <div>
     <h3>
@@ -17,5 +23,5 @@
         </font>
     </h3>
 
-    <input type="text" readonly class="colortext" name="answer" value=@ViewBag.Answer />
+    <input id ="colorChange" type="text" readonly name="answer" value='@ViewBag.Answer' />
 </div>

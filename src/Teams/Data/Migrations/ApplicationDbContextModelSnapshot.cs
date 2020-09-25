@@ -19,22 +19,6 @@ namespace Teams.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EpamTesting.Domain.OpenAnswerQuestion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TextAnswer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TextQuestion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OpenAnswerQuestions");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -261,6 +245,16 @@ namespace Teams.Data.Migrations
                     b.HasBaseType("Teams.Domain.Question");
 
                     b.HasDiscriminator().HasValue("MultipleAnswerQuestion");
+                });
+
+            modelBuilder.Entity("Teams.Domain.OpenAnswerQuestion", b =>
+                {
+                    b.HasBaseType("Teams.Domain.Question");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("OpenAnswerQuestion");
                 });
 
             modelBuilder.Entity("Teams.Domain.SingleSelectionQuestion", b =>

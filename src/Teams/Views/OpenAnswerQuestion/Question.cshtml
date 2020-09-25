@@ -2,8 +2,7 @@
     ViewData["Title"] = "Question";
 }
 <div>
-    <h3> Выбран вопрос  под номером : @ViewData["id"] </h3>
-
+   
     <h3>
         <font color="#0026ff">
             @ViewData["question"]
@@ -11,7 +10,8 @@
     </h3>
 
     <form method="get" action="/OpenAnswerQuestion/Answer">
-        <input type="text" name="answer" />
+        <input type="text" name="answer"  />
+        <input type="text" name="id"  value="@ViewData["id"]" hidden/>
         <input type="submit" value="Проверить" />
     </form>
 </div>

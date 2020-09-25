@@ -7,16 +7,21 @@ using Teams.Domain;
 
 namespace Teams.Domain
 {
-    public class OpenAnswerQuestion : Entity
+    public class OpenAnswerQuestion : Question
     {
+    
+        public string Answer { get; private set; }
 
-        public string TextQuestion { get; private set; }
-        public string TextAnswer { get; private set; }
-
-        public OpenAnswerQuestion(string textQuestion, string textAnswer)
+        public OpenAnswerQuestion(string text, string answer) : base(text)
         {
-            TextQuestion = textQuestion;
-            TextAnswer = textAnswer;
+            Answer = answer;
+        }
+        public bool CheckAnswer(string answer)
+        {
+            answer = answer.Trim();
+            if (answer == Answer)
+                return true;
+            return false; 
         }
 
     }
