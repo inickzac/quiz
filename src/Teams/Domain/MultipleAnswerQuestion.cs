@@ -6,32 +6,31 @@ using System.Security.Cryptography;
 using System.Net.Mime;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Domain
 {
     public class MultipleAnswerQuestion : Question
     {
+        List<MultipleAnswerQuestionOption> answers;
+        [NotMapped]public List<int> ChosenOptions;
+        [NotMapped]public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers => answers.ToList();
         public MultipleAnswerQuestion(string text) : base(text)
         {
         }
-        public MultipleAnswerQuestion(string t, List<Answer> a) : base(t)
+        public MultipleAnswerQuestion(string text, List<MultipleAnswerQuestionOption> answers) : base(text)
         {
-            if (a.Count == 0) throw new ApplicationException("A question must have possible answers");
-            answers = a;
-            text = t;
+            if (answers.Count == 0) throw new ArgumentException("A question must have at least one possible answer");
+            this.answers = answers;
         }
-        public List<Answer> answers;
-        public readonly string text;
-        public static MultipleAnswerQuestion PickById(Guid id, ApplicationDbContext context)
+        public bool[] GetRightAnswers()
         {
-            dynamic q;
-            using (var cont = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+            bool[] right = new bool[Answers.Count];
+            for (int i = 0; i < right.Length; i++)
             {
-                q = from item in cont.MultipleAnswerQuestions
-                        where item.Id == id
-                        select item;
+                right[i] = Answers.ToList()[i].IsRight;
             }
-            return q.First();
+            return right;
         }
     }
 }

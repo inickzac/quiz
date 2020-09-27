@@ -1,0 +1,46 @@
+﻿@model Teams.Domain.MultipleAnswerQuestion
+@{
+    ViewData["Title"] = "QuestForm";
+}
+<style>
+    div.border{
+        border: 5px;
+        border-color: green;
+    }
+</style>
+<h2>@(Model.Text)</h2>
+@using (Html.BeginForm("MultipleAnswerQuestionForm", "MultipleAnswerQuestion", FormMethod.Post))
+{
+    <input readonly hidden name="Id" value="@Model.Id" />
+    <div id="main_tree">
+        @for (int i = 0; i < Model.Answers.Count; i++)
+        {
+            <div id="div[@i] "name="div" >
+                <input type="checkbox" id="answer[@i] "name="answer" value="@i" />
+                <label for="answer[@i]">@Model.Answers.ToList()[i].Text</label>
+            </div>
+        }
+    </div>
+    if (Model.ChosenOptions is null)
+    {
+        <input type="submit" name="check">
+    }
+    else
+    {
+        <script>
+            var answers = document.getElementsByName("answer");
+            answers.forEach(a => a.disabled = true);
+            var chosenOptions = @Html.Raw(Json.Serialize(Model.ChosenOptions));
+            var rights = @Html.Raw(Json.Serialize(Model.GetRightAnswers()));
+            for (var i = 0; i < chosenOptions.length; i++)
+            {
+                answers[chosenOptions[i]].checked = true;
+            }
+            var divs = document.getElementsByName("div");
+            for (var i = 0; i < rights.length; i++)
+            {
+                if (rights[i]) divs[i].setAttribute("class", "border");
+            }
+        </script>
+    }
+}
