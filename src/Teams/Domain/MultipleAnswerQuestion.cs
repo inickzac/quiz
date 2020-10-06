@@ -13,8 +13,8 @@ namespace Teams.Domain
     public class MultipleAnswerQuestion : Question
     {
         List<MultipleAnswerQuestionOption> answers;
-        [NotMapped]public List<int> ChosenOptions;
-        [NotMapped]public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers => answers.ToList();
+        public List<int> ChosenOptions;
+        public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers { get; set; }
         public MultipleAnswerQuestion(string text) : base(text)
         {
         }
@@ -22,13 +22,15 @@ namespace Teams.Domain
         {
             if (answers.Count == 0) throw new ArgumentException("A question must have at least one possible answer");
             this.answers = answers;
+            Answers = answers.ToList();
         }
         public bool[] GetRightAnswers()
         {
             bool[] right = new bool[Answers.Count];
+            var listOfAnswers = Answers.ToList();
             for (int i = 0; i < right.Length; i++)
             {
-                right[i] = Answers.ToList()[i].IsRight;
+                right[i] = listOfAnswers[i].IsRight;
             }
             return right;
         }

@@ -26,27 +26,14 @@ namespace Teams.Controllers
         public IActionResult Index(Guid Id)
         {
             var questionRepository = new MultipleAnswerQuestionRepository(_db);
-            // test
-            var a = questionRepository.PickById(new Guid("F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4"));
-            //_db.MultipleAnswerQuestions.Add(a);
-            //_db.SaveChanges();
-            // delete between
-            return View("MultipleAnswerQuestionForm", a);
+            var question = questionRepository.PickById(Id);
+            return View("MultipleAnswerQuestionForm", question);
         }
         public IActionResult MultipleAnswerQuestionForm(string Id, int[] answer)
         {
             var questionRepository = new MultipleAnswerQuestionRepository(_db);
             var question = questionRepository.PickById(new Guid(Id));
             question.ChosenOptions = new List<int>(answer);
-            /*bool b = true;
-            for (int i = 0; i < question.answers.Count; i++)
-            {
-                if ((question.answers[i].isRight && !answer.Contains(i)) || (!question.answers[i].isRight && answer.Contains(i)))
-                {
-                    b = false;
-                    break;
-                }
-            }*/
             return View(question);
         }
     }

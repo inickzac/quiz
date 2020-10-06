@@ -10,6 +10,10 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.cs" />
     <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.cs" />
+    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.cs" />
+    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
