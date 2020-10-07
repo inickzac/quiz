@@ -3,22 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teams.Data;
 
 namespace Teams.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200918132401_AddQuestionOptionList")]
+    partial class AddQuestionOptionList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -240,7 +241,7 @@ namespace Teams.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Question");
                 });
 
-            modelBuilder.Entity("Teams.Domain.SingleSelectionQuestionOption", b =>
+            modelBuilder.Entity("Teams.Domain.QuestionOption", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,7 +260,7 @@ namespace Teams.Data.Migrations
 
                     b.HasIndex("SingleSelectionQuestionId");
 
-                    b.ToTable("SingleSelectionQuestionOption");
+                    b.ToTable("QuestionOption");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestion", b =>
@@ -267,16 +268,6 @@ namespace Teams.Data.Migrations
                     b.HasBaseType("Teams.Domain.Question");
 
                     b.HasDiscriminator().HasValue("MultipleAnswerQuestion");
-                });
-
-            modelBuilder.Entity("Teams.Domain.OpenAnswerQuestion", b =>
-                {
-                    b.HasBaseType("Teams.Domain.Question");
-
-                    b.Property<string>("Answer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("OpenAnswerQuestion");
                 });
 
             modelBuilder.Entity("Teams.Domain.SingleSelectionQuestion", b =>
@@ -337,10 +328,10 @@ namespace Teams.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Teams.Domain.SingleSelectionQuestionOption", b =>
+            modelBuilder.Entity("Teams.Domain.QuestionOption", b =>
                 {
                     b.HasOne("Teams.Domain.SingleSelectionQuestion", null)
-                        .WithMany("Options")
+                        .WithMany("OptionList")
                         .HasForeignKey("SingleSelectionQuestionId");
                 });
 #pragma warning restore 612, 618
