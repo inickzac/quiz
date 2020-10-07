@@ -7,7 +7,7 @@ using Teams.Domain;
 
 namespace Teams.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext, IApplicationDbContext
     {
         public DbSet<OpenAnswerQuestion> OpenAnswerQuestions { get; set; }
         public DbSet<Question> Questions { get; set; }

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teams", "Teams\Teams.csproj", "{A782FC50-20B2-429A-BDAE-4252FD33277C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Teams", "Teams\Teams.csproj", "{A782FC50-20B2-429A-BDAE-4252FD33277C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A74E17C6-FC8A-4755-99BD-6F03F7947F55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teams.Tests", "..\Teams.Tests\Teams.Tests.csproj", "{D94F4750-EBBF-4E52-B0CD-14C429382813}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A74E17C6-FC8A-4755-99BD-6F03F7947F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A74E17C6-FC8A-4755-99BD-6F03F7947F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A74E17C6-FC8A-4755-99BD-6F03F7947F55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D94F4750-EBBF-4E52-B0CD-14C429382813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D94F4750-EBBF-4E52-B0CD-14C429382813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D94F4750-EBBF-4E52-B0CD-14C429382813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D94F4750-EBBF-4E52-B0CD-14C429382813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
