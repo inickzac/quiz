@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Teams\Teams.csproj" />
   </ItemGroup>
 
 </Project>
