@@ -24,15 +24,15 @@ namespace Teams.Domain
             this.answers = answers;
             Answers = answers.ToList();
         }
-        public bool[] GetRightAnswers()
+        public string[] GetRightAnswers()
         {
-            bool[] right = new bool[Answers.Count];
+            var right = new List<string>();
             var listOfAnswers = Answers.ToList();
-            for (int i = 0; i < right.Length; i++)
+            for (int i = 0; i < listOfAnswers.Count; i++)
             {
-                right[i] = listOfAnswers[i].IsRight;
+                if (listOfAnswers[i].IsRight) right.Add(listOfAnswers[i].Id.ToString());
             }
-            return right;
+            return right.ToArray();
         }
     }
 }

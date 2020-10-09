@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +16,7 @@ namespace Teams.Data.Repositories
         }
         public MultipleAnswerQuestion PickById(Guid Id)
         {
-            var q = from question in _db.MultipleAnswerQuestions
-                    where question.Id == Id
-                    select question;
-            return q.First();
+            return _db.MultipleAnswerQuestions.Include(a => a.Answers).Single(q => q.Id == Id);
         }
     }
 }

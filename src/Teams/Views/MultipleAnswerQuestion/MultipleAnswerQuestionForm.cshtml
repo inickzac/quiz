@@ -1,6 +1,7 @@
 ﻿@model Teams.Domain.MultipleAnswerQuestion
 @{
     ViewData["Title"] = "QuestForm";
+    var Answers = Model.Answers.ToList();
 }
 <style>
     div.border {
@@ -15,9 +16,9 @@
     <div id="main_tree">
         @for (int i = 0; i < Model.Answers.Count; i++)
         {
-            <div id="div[@i] " name="div">
+            <div id="div[@i]" name="div">
                 <input type="checkbox" id="answer[@i] " name="answer" value="@i" />
-                <label for="answer[@i]">@Model.Answers.ToList()[i].Text</label>
+                <label for="answer[@i]" id="@Answers[i].Id">@Answers[i].Text</label>
             </div>
         }
     </div>
@@ -38,9 +39,10 @@
                 answers[chosenOptions[i]].checked = true;
             }
             var divs = document.getElementsByName("div");
-            for (var i = 0; i < rights.length; i++)
+            for (var i = 0; i < divs.length; i++)
             {
-                if (rights[i]) $(divs[i]).css("border", "3px solid green");
+                var child = Array.from(divs[i].children).find(c => c.nodeName == "LABEL");
+                if (rights.includes(child.getAttribute("id"))) $(divs[i]).css("border", "3px solid green"); 
             }
         </script>
     }
