@@ -1,17 +1,16 @@
-﻿@{
+﻿@model Teams.Models.OpenAnswerQuestionModel
+@{ 
     ViewData["Title"] = "Question";
 }
 <div>
    
     <h3>
-        <font color="#0026ff">
-            @ViewData["question"]
-        </font>
+            @Model.Question
     </h3>
 
     <form method="get" action="/OpenAnswerQuestion/Answer">
         <input type="text" name="answer"  />
-        <input type="text" name="id"  value="@ViewData["id"]" hidden/>
+        <input type="text" name="id"  value="@Model.Id" hidden/>
         <input type="submit" value="Проверить" />
     </form>
 </div>

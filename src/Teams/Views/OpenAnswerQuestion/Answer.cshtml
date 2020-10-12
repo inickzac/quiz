@@ -1,27 +1,19 @@
-﻿@{
+﻿@model Teams.Models.OpenAnswerQuestionModel
+@{
     ViewData["Title"] = "Answer";
 }
-    <script>
-
-        window.onload = function () {
-            
-            var isTrue = '@ViewData["color"]' == "True";
-            alert('alert:  ' + isTrue)
-            if (isTrue) 
-                $("#colorChange").css("border", "3px solid green")
-            else
-                $("#colorChange").css("border", "3px solid red")
-
-        }
-
-    </script>
-
+    <style>
+    .colorGreen{       
+        border: 3px solid green;      
+    }
+    .colorRed {
+            border: 3px solid green;
+    }
+    </style>
 <div>
     <h3>
-        <font color="#0026ff">
-            @ViewData["question"]
-        </font>
+        @Model.Question
     </h3>
 
-    <input id ="colorChange" type="text" readonly name="answer" value='@ViewBag.Answer' />
+    <input type="text" readonly name="answer" class="@(Model.IsAnswer ? "colorgreen" : "colorred")" value='@Model.Answer' />
 </div>

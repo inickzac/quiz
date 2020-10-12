@@ -16,13 +16,12 @@ namespace Teams.Domain
         {
             Answer = answer;
         }
-        public bool CheckAnswer(string answer)
-        {
+        public bool IsCorrectAnswer(string answer)
+        {            
             answer = answer.Trim();
-            if (answer == Answer)
-                return true;
-            return false; 
+            return answer == Answer;              
         }
+
 
     }
 }
