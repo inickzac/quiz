@@ -3,10 +3,10 @@
     ViewData["Title"] = "Answer";
 }
     <style>
-    .colorGreen{       
+    .success{       
         border: 3px solid green;      
     }
-    .colorRed {
+    .fail{
             border: 3px solid green;
     }
     </style>
@@ -15,5 +15,5 @@
         @Model.Question
     </h3>
 
-    <input type="text" readonly name="answer" class="@(Model.IsAnswer ? "colorgreen" : "colorred")" value='@Model.Answer' />
+    <input type="text" readonly name="answer" class="@(Model.IsAnswer ? "success" : "fail")" value='@Model.Answer' />
 </div>

@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teams.Data.SingleSelectionQuestionRepos;
-
+using Teams.Data.OpenAnswerQuestionRepos;
 
 namespace Teams
 {
@@ -36,6 +36,7 @@ namespace Teams
                 .AddEntityFrameworkStores<ApplicationDbContext>();          
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<ISingleSelectionQuestionRepository, SingleSelectionQuestionRepository>();
+            services.AddScoped<IOpenAnswerQuestionRepository, OpenAnswerQuestionRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

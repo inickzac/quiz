@@ -13,9 +13,9 @@ namespace Teams.Controllers
     public class OpenAnswerQuestionController : Controller
     {
 
-        public IOpenAnswerQuestionRespository context;
+        public IOpenAnswerQuestionRepository context;
        
-        public OpenAnswerQuestionController(IOpenAnswerQuestionRespository context)
+        public OpenAnswerQuestionController(IOpenAnswerQuestionRepository context)
         {
             this.context = context;
         }

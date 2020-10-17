@@ -6,7 +6,7 @@ using Teams.Domain;
 
 namespace Teams.Data.OpenAnswerQuestionRepos
 {
-    public interface IOpenAnswerQuestionRespository
+    public interface IOpenAnswerQuestionRepository
     {
         public OpenAnswerQuestion Get(Guid id);
     }

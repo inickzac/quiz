@@ -6,10 +6,10 @@ using Teams.Domain;
 
 namespace Teams.Data.OpenAnswerQuestionRepos
 {
-    public class OpenAnswerQuestionRespository : IOpenAnswerQuestionRespository
+    public class OpenAnswerQuestionRepository : IOpenAnswerQuestionRepository
     {
         IApplicationDbContext context;
-        public OpenAnswerQuestionRespository(IApplicationDbContext context)
+        public OpenAnswerQuestionRepository(IApplicationDbContext context)
         {
             this.context = context;
         }
