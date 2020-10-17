@@ -6,7 +6,7 @@ using Teams.Domain;
 
 namespace Teams.Data.Repositories
 {
-    interface IMultipleAnswerQuestionRepository
+    public interface IMultipleAnswerQuestionRepository
     {
         MultipleAnswerQuestion PickById(Guid Id);
     }

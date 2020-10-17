@@ -13,26 +13,24 @@ namespace Teams.Domain
     public class MultipleAnswerQuestion : Question
     {
         List<MultipleAnswerQuestionOption> answers;
-        public List<int> ChosenOptions;
-        public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers { get; set; }
+        public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers => answers.ToList();
         public MultipleAnswerQuestion(string text) : base(text)
         {
+            if (text is null || text?.Length < 1) throw new ArgumentException("A question must have non-empty title");
         }
         public MultipleAnswerQuestion(string text, List<MultipleAnswerQuestionOption> answers) : base(text)
         {
             if (answers.Count == 0) throw new ArgumentException("A question must have at least one possible answer");
+            if (text is null || text?.Length < 1) throw new ArgumentException("A question must have non-empty title");
             this.answers = answers;
-            Answers = answers.ToList();
         }
-        public string[] GetRightAnswers()
+        public Guid[] GetRightAnswersIds()
         {
-            var right = new List<string>();
-            var listOfAnswers = Answers.ToList();
-            for (int i = 0; i < listOfAnswers.Count; i++)
-            {
-                if (listOfAnswers[i].IsRight) right.Add(listOfAnswers[i].Id.ToString());
-            }
-            return right.ToArray();
+            return GetRightAnswers().Select(a => a.Id).ToArray();
+        }
+        public MultipleAnswerQuestionOption[] GetRightAnswers()
+        {
+            return Answers.Where(a => a.IsRight).ToArray();
         }
     }
 }

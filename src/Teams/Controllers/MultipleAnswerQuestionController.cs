@@ -17,24 +17,26 @@ namespace Teams.Controllers
         public MultipleAnswerQuestionController(ApplicationDbContext db)
         {
             _db = db;
+            questionRepository = new MultipleAnswerQuestionRepository(_db);
         }
         private readonly ApplicationDbContext _db;
-        public IActionResult Index()
-        {
-            return View();
-        }
+        private readonly IMultipleAnswerQuestionRepository questionRepository;
         [HttpPost]
-        public IActionResult Index(Guid Id)
+        public IActionResult Index(Guid id)
         {
-            var questionRepository = new MultipleAnswerQuestionRepository(_db);
-            var question = questionRepository.PickById(Id);
+            var question = new MultipleAnswerQuestionViewModel()
+            {
+                SourceQuestion = questionRepository.PickById(id)
+            };
             return View("MultipleAnswerQuestionForm", question);
         }
-        public IActionResult MultipleAnswerQuestionForm(string Id, int[] answer)
+        public IActionResult MultipleAnswerQuestionForm(string id, int[] answers)
         {
-            var questionRepository = new MultipleAnswerQuestionRepository(_db);
-            var question = questionRepository.PickById(new Guid(Id));
-            question.ChosenOptions = new List<int>(answer);
+            var question = new MultipleAnswerQuestionViewModel()
+            {
+                SourceQuestion = questionRepository.PickById(new Guid(id)),
+                ChosenOptions = answers
+            };
             return View(question);
         }
     }

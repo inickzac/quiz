@@ -1,23 +1,23 @@
-﻿@model Teams.Domain.MultipleAnswerQuestion
+﻿@model Teams.Models.MultipleAnswerQuestionViewModel
 @{
     ViewData["Title"] = "QuestForm";
-    var Answers = Model.Answers.ToList();
+    var Answers = Model.SourceQuestion.Answers.ToList();
 }
 <style>
-    div.border {
-        border: 5px;
+    .border_for_the_right_answer {
+        border: 3px solid;
         border-color: green;
     }
 </style>
-<h2>@(Model.Text)</h2>
+<h2>@(Model.SourceQuestion.Text)</h2>
 @using (Html.BeginForm("MultipleAnswerQuestionForm", "MultipleAnswerQuestion", FormMethod.Post))
 {
-    <input readonly hidden name="Id" value="@Model.Id" />
-    <div id="main_tree">
-        @for (int i = 0; i < Model.Answers.Count; i++)
+    <input readonly hidden name="Id" value="@Model.SourceQuestion.Id" />
+    <div id="options_container">
+        @for (int i = 0; i < Model.SourceQuestion.Answers.Count; i++)
         {
             <div id="div[@i]" name="div">
-                <input type="checkbox" id="answer[@i] " name="answer" value="@i" />
+                <input type="checkbox" id="answers[@i]" name="answers" value="@i" />
                 <label for="answer[@i]" id="@Answers[i].Id">@Answers[i].Text</label>
             </div>
         }
@@ -28,22 +28,19 @@
     }
     else
     {
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
-            var answers = document.getElementsByName("answer");
-            answers.forEach(a => a.disabled = true);
-            var chosenOptions = @Html.Raw(Json.Serialize(Model.ChosenOptions));
-            var rights = @Html.Raw(Json.Serialize(Model.GetRightAnswers()));
-            for (var i = 0; i < chosenOptions.length; i++)
-            {
-                answers[chosenOptions[i]].checked = true;
-            }
-            var divs = document.getElementsByName("div");
-            for (var i = 0; i < divs.length; i++)
-            {
-                var child = Array.from(divs[i].children).find(c => c.nodeName == "LABEL");
-                if (rights.includes(child.getAttribute("id"))) $(divs[i]).css("border", "3px solid green"); 
-            }
+            window.addEventListener('load', function () {
+                let answers = document.getElementsByName("answers");
+                answers.forEach(a => a.disabled = true);
+                let chosenOptions = @Html.Raw(Json.Serialize(Model.ChosenOptions));
+                let rights = @Html.Raw(Json.Serialize(Model.SourceQuestion.GetRightAnswersIds()));
+                for (var i = 0; i < chosenOptions.length; i++) {
+                    answers[chosenOptions[i]].checked = true;
+                }
+                $("#options_container label").each((index, element) => {
+                    if (rights.includes(element.id)) $(element).addClass("border_for_the_right_answer");
+                });
+            });
         </script>
     }
 }
