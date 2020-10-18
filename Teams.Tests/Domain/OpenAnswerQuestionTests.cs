@@ -37,7 +37,7 @@ namespace Teams.Tests.Domain
             var answer = openAnswerQuestion.IsCorrectAnswer("Harrow");
          
             //Assert
-            Assert.True(answer);
+            Assert.False(answer);
         }
     }
 }
