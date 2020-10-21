@@ -6,26 +6,26 @@ using Xunit;
 
 namespace Teams.Tests.Domain
 {
-    
+
     public class OpenAnswerQuestionTests
     {
-        [Fact]
-        public void CheckAnswer_Return()
+        [Theory]
+        [InlineData("Eton")]
+        [InlineData(" Eton")]
+        [InlineData("Eton ")]
+        [InlineData(" Eton ")]
+        public void CheckAnswer_Return(string textAnswer)
         {
             //Arrange
             var openAnswerQuestion = new OpenAnswerQuestion("What is the oldest public school in England?", "Eton");
 
             //Act
-            var firstAnswer = openAnswerQuestion.IsCorrectAnswer("Eton");
-            var secondAnswer = openAnswerQuestion.IsCorrectAnswer(" Eton");
-            var thirdAnswer = openAnswerQuestion.IsCorrectAnswer("Eton ");
-            var fourthAnswer = openAnswerQuestion.IsCorrectAnswer(" Eton ");
+            var answer = openAnswerQuestion.IsCorrectAnswer(textAnswer);
+           
 
             //Assert
-            Assert.True(firstAnswer);
-            Assert.True(secondAnswer);
-            Assert.True(thirdAnswer);
-            Assert.True(fourthAnswer);
+            Assert.True(answer);
+            
         }
         [Fact]
         public void CheckAnswer_Fail_Return()
