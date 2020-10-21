@@ -10,7 +10,7 @@
     }
 </style>
 <h2>@(Model.SourceQuestion.Text)</h2>
-@using (Html.BeginForm("MultipleAnswerQuestionForm", "MultipleAnswerQuestion", FormMethod.Post))
+@using (Html.BeginForm("MultipleAnswerQuestionForm", "MultipleAnswerQuestion", FormMethod.Get))
 {
     <input readonly hidden name="Id" value="@Model.SourceQuestion.Id" />
     <div id="options_container">
@@ -18,7 +18,7 @@
         {
             <div id="div[@i]" name="div">
                 <input type="checkbox" id="answers[@i]" name="answers" value="@i" />
-                <label for="answer[@i]" id="@Answers[i].Id">@Answers[i].Text</label>
+                <label for="answers[@i]" id="@Answers[i].Id">@Answers[i].Text</label>
             </div>
         }
     </div>
@@ -28,19 +28,23 @@
     }
     else
     {
-        <script>
-            window.addEventListener('load', function () {
-                let answers = document.getElementsByName("answers");
-                answers.forEach(a => a.disabled = true);
-                let chosenOptions = @Html.Raw(Json.Serialize(Model.ChosenOptions));
-                let rights = @Html.Raw(Json.Serialize(Model.SourceQuestion.GetRightAnswersIds()));
-                for (var i = 0; i < chosenOptions.length; i++) {
-                    answers[chosenOptions[i]].checked = true;
-                }
-                $("#options_container label").each((index, element) => {
-                    if (rights.includes(element.id)) $(element).addClass("border_for_the_right_answer");
-                });
-            });
-        </script>
+<script>
+    function show_right_answers()
+    {
+        let answers = document.getElementsByName("answers");
+        answers.forEach(a => a.disabled = true);
+        let chosenOptions = @Html.Raw(Json.Serialize(Model.ChosenOptions));
+        let rights = @Html.Raw(Json.Serialize(Model.SourceQuestion.GetRightAnswersIds()));
+        for (var i = 0; i < chosenOptions.length; i++)
+        {
+            answers[chosenOptions[i]].checked = true;
+        }
+        $("#options_container label").each((index, element) =>
+        {
+            if (rights.includes(element.id)) $(element).addClass("border_for_the_right_answer");
+        });
+    }
+    window.addEventListener('load', show_right_answers);
+</script>
     }
 }

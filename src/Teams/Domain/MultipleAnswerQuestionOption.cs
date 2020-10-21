@@ -9,10 +9,10 @@ namespace Teams.Domain
     {
         public string Text { get; private set; }
         public bool IsRight { get; private set; }
-        public MultipleAnswerQuestionOption(string Text, bool IsRight = false)
+        public MultipleAnswerQuestionOption(string text, bool isRight = false)
         {
-            this.Text = Text;
-            this.IsRight = IsRight;
+            Text = text;
+            IsRight = isRight;
         }
     }
 }

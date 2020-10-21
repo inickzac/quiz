@@ -12,16 +12,16 @@ namespace Teams.Domain
 {
     public class MultipleAnswerQuestion : Question
     {
-        List<MultipleAnswerQuestionOption> answers;
+        private List<MultipleAnswerQuestionOption> answers;
         public IReadOnlyCollection<MultipleAnswerQuestionOption> Answers => answers.ToList();
         public MultipleAnswerQuestion(string text) : base(text)
         {
-            if (text is null || text?.Length < 1) throw new ArgumentException("A question must have non-empty title");
+            if (string.IsNullOrEmpty(text)) throw new ArgumentException("A question must have non-empty title");
         }
         public MultipleAnswerQuestion(string text, List<MultipleAnswerQuestionOption> answers) : base(text)
         {
             if (answers.Count == 0) throw new ArgumentException("A question must have at least one possible answer");
-            if (text is null || text?.Length < 1) throw new ArgumentException("A question must have non-empty title");
+            if (string.IsNullOrEmpty(text)) throw new ArgumentException("A question must have non-empty title");
             this.answers = answers;
         }
         public Guid[] GetRightAnswersIds()

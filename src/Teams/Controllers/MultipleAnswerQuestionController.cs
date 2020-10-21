@@ -14,14 +14,12 @@ namespace Teams.Controllers
 {
     public class MultipleAnswerQuestionController : Controller
     {
-        public MultipleAnswerQuestionController(ApplicationDbContext db)
+        public MultipleAnswerQuestionController(IMultipleAnswerQuestionRepository questionRepository)
         {
-            _db = db;
-            questionRepository = new MultipleAnswerQuestionRepository(_db);
+            this.questionRepository = questionRepository;
         }
-        private readonly ApplicationDbContext _db;
         private readonly IMultipleAnswerQuestionRepository questionRepository;
-        [HttpPost]
+        [HttpGet]
         public IActionResult Index(Guid id)
         {
             var question = new MultipleAnswerQuestionViewModel()
