@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Teams.Data.Repositories;
+using Teams.Data.SingleSelectionQuestionRepos;
 
 namespace Teams
 {
@@ -31,9 +32,11 @@ namespace Teams
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();
+            services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();        
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<ISingleSelectionQuestionRepository, SingleSelectionQuestionRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
