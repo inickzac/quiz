@@ -12,8 +12,8 @@ using Teams.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Teams.Data.Repositories;
 using Teams.Data.SingleSelectionQuestionRepos;
-
 
 namespace Teams
 {
@@ -33,7 +33,8 @@ namespace Teams
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();          
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();        
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<ISingleSelectionQuestionRepository, SingleSelectionQuestionRepository>();
             services.AddControllersWithViews();
