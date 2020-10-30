@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teams.Data;
 
 namespace Teams.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201006132645_AddMultipleAnswerQuestionOptions")]
+    partial class AddMultipleAnswerQuestionOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,28 +263,6 @@ namespace Teams.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Question");
                 });
 
-            modelBuilder.Entity("Teams.Domain.SingleSelectionQuestionOption", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAnswer")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("SingleSelectionQuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SingleSelectionQuestionId");
-
-                    b.ToTable("SingleSelectionQuestionOption");
-                });
-
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestion", b =>
                 {
                     b.HasBaseType("Teams.Domain.Question");
@@ -353,13 +333,6 @@ namespace Teams.Data.Migrations
                     b.HasOne("Teams.Domain.MultipleAnswerQuestion", null)
                         .WithMany("Answers")
                         .HasForeignKey("MultipleAnswerQuestionId");
-                });
-                
-            modelBuilder.Entity("Teams.Domain.SingleSelectionQuestionOption", b =>
-                {
-                    b.HasOne("Teams.Domain.SingleSelectionQuestion", null)
-                        .WithMany("Options")
-                        .HasForeignKey("SingleSelectionQuestionId");
                 });
 #pragma warning restore 612, 618
         }
