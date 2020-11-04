@@ -16,12 +16,16 @@ namespace Teams.Domain
         {
             Answer = answer;
         }
+
+
+        public OpenAnswerQuestion(string text) : base(text)
+        {
+        }
+
         public bool IsCorrectAnswer(string answer)
         {            
             answer = answer.Trim();
             return answer == Answer;              
         }
-
-
     }
 }
