@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Teams.Data;
 using Teams.Domain;
+using Teams.Models;
 
 namespace Teams.Domain
 {
@@ -17,7 +20,6 @@ namespace Teams.Domain
             Answer = answer;
         }
 
-
         public OpenAnswerQuestion(string text) : base(text)
         {
         }
@@ -26,6 +28,12 @@ namespace Teams.Domain
         {            
             answer = answer.Trim();
             return answer == Answer;              
+        }
+
+        public void UpdateQuestion(OpenAnswerQuestionModel modelForView)
+        {
+            Text = modelForView.Question;
+            Answer = modelForView.Answer;
         }
     }
 }

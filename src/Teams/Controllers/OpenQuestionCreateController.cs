@@ -28,10 +28,10 @@ namespace Teams.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView)
         {
-            OpenAnswerQuestion Question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
-            _db.OpenAnswerQuestions.Add(Question);
+            OpenAnswerQuestion question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
+            _db.OpenAnswerQuestions.Add(question);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Edit(Guid id)
@@ -53,12 +53,11 @@ namespace Teams.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(OpenAnswerQuestionModel modelForView)
         {
-            OpenAnswerQuestion Question = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == modelForView.Id);
-            _db.Entry(Question).State = EntityState.Deleted;
-            Question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
-             _db.OpenAnswerQuestions.Update(Question);
+            OpenAnswerQuestion question = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == modelForView.Id);
+            question.UpdateQuestion(modelForView);
+            _db.Entry(question).State = EntityState.Modified;
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
     }
 }

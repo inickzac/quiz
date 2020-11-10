@@ -6,13 +6,13 @@
 <form asp-action="create" asp-controller="OpenQuestionCreate">
     <div class="form-group">
         <label asp-for="Question" class="control-label">Question text</label>
-        <input type="text" asp-for="Question" class="form-control" />
+        <textarea type="text" asp-for="Question" class="form-control"></textarea>
     </div>
     <div class="form-group">
         <label asp-for="Answer" class="control-label">Answer text</label>
         <input type="text" asp-for="Answer" class="form-control" />
     </div>
     <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-default" />
+        <input type="submit" value="Submit" class="btn btn-light" />
     </div>
 </form>
