@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Teams.Data;
-using Teams.Domain;
+﻿using System;
 using Teams.Models;
 
 namespace Teams.Domain
