@@ -9,7 +9,7 @@ namespace Teams.Tests.Domain
     public class OpenAnswerQuestionUpdateTests
     {
         [Fact]
-        public void testUpdatingQuestionAndAnswerProperties()
+        public void UpdateQuestion_ChangesTextAndAnswer()
         {
             //arrange
 
