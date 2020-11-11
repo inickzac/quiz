@@ -23,10 +23,10 @@ namespace Teams.Domain
             return answer == Answer;              
         }
 
-        public void UpdateQuestion(OpenAnswerQuestionModel modelForView)
+        public void UpdateQuestion(string question, string answer)
         {
-            Text = modelForView.Question;
-            Answer = modelForView.Answer;
+            Text = question;
+            Answer = answer;
         }
     }
 }

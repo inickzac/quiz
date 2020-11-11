@@ -54,8 +54,7 @@ namespace Teams.Controllers
         public async Task<IActionResult> Edit(OpenAnswerQuestionModel modelForView)
         {
             OpenAnswerQuestion question = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == modelForView.Id);
-            question.UpdateQuestion(modelForView);
-            _db.Entry(question).State = EntityState.Modified;
+            question.UpdateQuestion(modelForView.Question, modelForView.Answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
         }
