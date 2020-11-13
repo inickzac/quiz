@@ -35,7 +35,8 @@ namespace Teams
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();        
+            services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();
+            services.AddScoped<IProgramCodeQuestionRepository, ProgramCodeQuestionRepository>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<ISingleSelectionQuestionRepository, SingleSelectionQuestionRepository>();
             services.AddScoped<IOpenAnswerQuestionRepository, OpenAnswerQuestionRepository>();
