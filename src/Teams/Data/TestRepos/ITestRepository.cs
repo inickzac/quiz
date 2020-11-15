@@ -10,6 +10,6 @@ namespace Teams.Data.TestRepos
     public interface ITestRepository 
     {
         public List<Test> GetAll();
-        public Test Get(Guid guid);
+        public Test Get(Guid id);
     }
 }

@@ -17,9 +17,9 @@ namespace Teams.Data.QuestionRepos
         {
             return _dbContext.Questions.ToList();
         }
-        public List<Question> GetTestQuestions(Guid id)
+        public List<Question> GetTestQuestions(Guid testId)
         {
-            return _dbContext.TestQuestions.Where(w => w.TestId == id).Select(w => w.Question).ToList();
+            return _dbContext.TestQuestions.Where(w => w.TestId == testId).Select(w => w.Question).ToList();
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Teams.Data.QuestionRepos
     public interface IQuestionRepository
     {
         public List<Question> GetQuestions();
-        public List<Question> GetTestQuestions(Guid id);
+        public List<Question> GetTestQuestions(Guid testId);
     }
 }

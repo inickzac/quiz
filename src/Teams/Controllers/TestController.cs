@@ -42,17 +42,17 @@ namespace Teams.Controllers
             var test = _testRepository.Get(id);
             if (test == null)
             {
-                throw new ArgumentException();
+                return NotFound();
             }
             var testDto = new TestDTO() 
             {
                 Id = test.Id,
                 Title = test.Title
             };
-            foreach (var item in _questionRepository.GetTestQuestions(id))
-            {
-                testDto.Questions.Add(new QuestionDTO(item.Id, item.Text));
-            }
+            testDto.Questions = _questionRepository
+                .GetTestQuestions(id)
+                .Select(item => new QuestionDTO(item.Id, item.Text))
+                .ToList();
             return View(testDto);
         }
         [HttpPost]
@@ -60,7 +60,7 @@ namespace Teams.Controllers
         {
             if (test == null)
             {
-                throw new ArgumentException();
+                return BadRequest();
             }
             var testQuestions = _dbContext.TestQuestions.Where(w => w.TestId == test.Id);
             _dbContext.TestQuestions.RemoveRange(testQuestions);
@@ -86,14 +86,14 @@ namespace Teams.Controllers
         {
             if (test == null)
             {
-                throw new ArgumentNullException();
+                return BadRequest();
             }
             foreach (var item in id)
             {
                 var question = _dbContext.Questions.FirstOrDefault(w => w.Id == item);
                 if (question == null)
                 {
-                    throw new ArgumentNullException();
+                    return BadRequest();
                 }
                 var questionDTO = new QuestionDTO(question.Id, question.Text);
                 if (!test.Questions.Any(w => w.Id == item))

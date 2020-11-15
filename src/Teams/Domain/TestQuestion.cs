@@ -10,10 +10,8 @@ namespace Teams.Domain
     public class TestQuestion: Entity
     {
         public Guid TestId { get; private set; }
-        [ForeignKey("TestId")]
         public Test Test { get; private set; }
         public Guid QuestionId { get; private set; }
-        [ForeignKey("QuestionId")]
         public Question Question { get; private set; }
         public TestQuestion(Guid testId, Guid questionId)
         {

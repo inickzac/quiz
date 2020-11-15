@@ -19,9 +19,9 @@ namespace Teams.Data.TestRepos
         {
             return _dbContext.Tests.ToList();
         }
-        public Test Get(Guid guid)
+        public Test Get(Guid id)
         {
-            return _dbContext.Tests.Include(q => q.TestQuestions).FirstOrDefault(w => w.Id == guid);
+            return _dbContext.Tests.Include(q => q.TestQuestions).FirstOrDefault(w => w.Id == id);
         }
     }
 }
