@@ -1,0 +1,17 @@
+﻿@model Teams.Models.OpenAnswerQuestionModel
+    @{
+        ViewBag.Title = "Edit question";
+    }
+    <form asp-action="edit" asp-controller="OpenQuestionCreate" asp-route-id="@Model.Id">
+        <div class="form-group">
+            <label asp-for="Question" class="control-label">Question</label>
+            <textarea type="text" asp-for="Question" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="Answer" class="control-label">Answer</label>
+            <input type="text" asp-for="Answer" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-light" />
+        </div>
+    </form>

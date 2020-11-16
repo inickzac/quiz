@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Teams.Domain;
+using Teams.Models;
 
 namespace Teams.Domain
 {
@@ -16,12 +12,21 @@ namespace Teams.Domain
         {
             Answer = answer;
         }
+
+        public OpenAnswerQuestion(string text) : base(text)
+        {
+        }
+
         public bool IsCorrectAnswer(string answer)
         {            
             answer = answer.Trim();
             return answer == Answer;              
         }
 
-
+        public void UpdateQuestion(string question, string answer)
+        {
+            Text = question;
+            Answer = answer;
+        }
     }
 }

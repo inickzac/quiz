@@ -2,7 +2,7 @@
 {
     public class Question : Entity
     {
-        public string Text { get; private set; }
+        public string Text { get; protected set; }
 
         public Question(string text)
         {
