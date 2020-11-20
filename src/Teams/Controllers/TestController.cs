@@ -79,7 +79,7 @@ namespace Teams.Controllers
         public IActionResult DeleteQuestion([FromBody] TestDTO test, Guid id)
         {
             test.Questions.RemoveAll(w => w.Id == id);
-            return View("Edit", test);
+            return PartialView("_EditPartial", test);
         }
         [HttpPost]
         public IActionResult AddQuestion(List<Guid> id, [FromBody] TestDTO test)
@@ -101,7 +101,7 @@ namespace Teams.Controllers
                     test.Questions.Add(questionDTO);
                 }
             }
-            return View("Edit", test);
+            return PartialView("_EditPartial", test);
         }
         public IActionResult Delete(Guid id)
         {
