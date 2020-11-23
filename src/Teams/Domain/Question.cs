@@ -7,9 +7,10 @@ namespace Teams.Domain
 {
     public class Question : Entity
     {
-        public string Text { get; private set; }
+        public string Text { get; protected set; }
         private List<TestQuestion> _testQuestions;
         public IReadOnlyCollection<TestQuestion> TestQuestions => _testQuestions.ToList();
+
         public Question(string text)
         {
             Text = text;
