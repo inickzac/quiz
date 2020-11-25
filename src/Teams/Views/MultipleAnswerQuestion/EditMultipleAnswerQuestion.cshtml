@@ -1,0 +1,22 @@
+﻿@model Teams.Models.MultipleAnswerQuestionViewModel
+
+@{
+    var Answers = Model.SourceQuestion.Answers.ToList();
+
+}
+
+<form method="post">
+    <h3>Введите текст вариантов ответа и отметьте правильные</h3>
+    <input style="visibility:collapse" name="Id" value="@Model.SourceQuestion.Id" /><br>
+    <input type="text" name="questionText" value="@(Model.SourceQuestion.Text)" />
+    <div id="options_container">
+        @for (int i = 0; i < Model.SourceQuestion.Answers.Count; i++)
+        {
+            <div id="div[@i]" name="div">
+                <input type="checkbox" id="answers[@i]" name="editAnswers" value="@i" />
+                <label for="answers[@i]" id="@Answers[i].Id"><input value="@Answers[i].Text"></label>
+            </div>
+        }
+    </div>
+    <input type="submit" />
+</form>

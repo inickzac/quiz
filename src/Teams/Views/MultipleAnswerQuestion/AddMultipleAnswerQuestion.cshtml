@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+*@
+@{
+}
+
+
+<meta charset="utf-8">
+<label>Введите текст вопроса:</label>
+<br />
+<div id="qText">
+    <input type="text" name="questionText"><br /><br />
+    <p id="hidenText" hidden>Добавьте текст ответа и отметьте правильный ли он</p>
+</div>
+<input type="button" value="Добавить вариант ответа" onclick="addForm()" />
+<input type="button" value="Отправить" onclick="addAnswers()" />
+
+
+
+<script>
+
+    function addForm() {
+        let element = document.getElementById('qText');
+        let hidenText = document.getElementById('hidenText');
+        let inpt = document.createElement('input');
+        let checkbox = document.createElement('input');
+        let br = document.createElement('br');
+
+        inpt.setAttribute('type', 'text');
+        inpt.setAttribute('class', 'answersText');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.setAttribute('class', 'itTrue');
+
+        element.appendChild(inpt);
+        element.appendChild(checkbox);
+        element.appendChild(br);
+
+        hidenText.hidden = false;
+    }
+
+    function addAnswers() {
+        let someText = document.getElementsByName('questionText');
+        let questionText = someText[0].value;
+        let answersTextList = document.getElementsByClassName('answersText');
+        let answersCheckboxList = document.getElementsByClassName('itTrue');
+        var jTextList = new Array();
+        var jCheckboxList = new Array();
+        for (let i = 0; i < answersTextList.length; i++) {
+            jTextList[i] = answersTextList[i].value;
+            jCheckboxList[i] = answersCheckboxList[i].value;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddMultipleAnswerQuestion", "MultipleAnswerQuestion")",
+            data: { questionText: questionText, jTextList: jTextList, jCheckboxList: jCheckboxList },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            traditional: true,
+            success: function () {
+                alert('Question is added');
+            }
+        });
+    }
+
+
+</script>
