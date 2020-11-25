@@ -9,5 +9,9 @@ namespace Teams.Data.Repositories
     public interface IMultipleAnswerQuestionRepository
     {
         MultipleAnswerQuestion PickById(Guid Id);
+
+        public void MethodForAdd(MultipleAnswerQuestion question);
     }
+
+
 }

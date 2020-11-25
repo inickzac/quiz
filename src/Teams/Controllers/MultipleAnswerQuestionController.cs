@@ -37,5 +37,51 @@ namespace Teams.Controllers
             };
             return View(question);
         }
+
+        public IActionResult EditMultipleAnswerQuestion(Guid id)
+        {
+            var question = new MultipleAnswerQuestionViewModel()
+            {
+                SourceQuestion = questionRepository.PickById(id),
+                // ChosenOptions = answers
+            };
+            return View(question);
+        }
+
+        public IActionResult AddMultipleAnswerQuestion()
+        {
+            return View();
+        }
+
+        public IActionResult ForCheck(string questionText)
+        {
+            ViewBag.Text = "questionText";
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddMultipleAnswerQuestion([FromBody] MAQDTOModel fromAjax)
+        {
+            //MultipleAnswerQuestion question = new MultipleAnswerQuestion(questionText, answers);
+            //questionRepository.MethodForAdd(question);
+            string text;
+            if(fromAjax.jTextList == null)
+            {
+                 text = "yes";
+            }
+            else
+            {
+                text = "no";
+            }
+            return View("ForCheck", text); 
+            
+        }
+        [HttpPost]
+        public IActionResult EditMultipleAnswerQuestion(List<MultipleAnswerQuestionOption> editAnswers, string questionText, string Id)
+        {
+            
+            return Content(questionText);
+        }
+
     }
 }
