@@ -11,6 +11,8 @@ namespace Teams.Data.Repositories
         MultipleAnswerQuestion PickById(Guid Id);
 
         public void MethodForAdd(MultipleAnswerQuestion question);
+
+        public void SaveAllChanges();
     }
 
 

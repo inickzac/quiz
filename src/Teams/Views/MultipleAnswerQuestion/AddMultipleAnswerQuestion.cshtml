@@ -15,12 +15,13 @@
     <input type="text" name="questionText"><br /><br />
     <p id="hidenText" hidden>Добавьте текст ответа и отметьте правильный ли он</p>
 </div>
-<input type="button" value="Добавить вариант ответа" onclick="addForm()" />
+<input type="button" id="buttonForAdd" value="Добавить вариант ответа" onclick="addForm()" />
 <input type="button" value="Отправить" onclick="addAnswers()" />
 
 
 
 <script>
+    let answersCount = 0;
 
     function addForm() {
         let element = document.getElementById('qText');
@@ -28,6 +29,7 @@
         let inpt = document.createElement('input');
         let checkbox = document.createElement('input');
         let br = document.createElement('br');
+        let buttonForAdd = document.getElementById('buttonForAdd');
 
         inpt.setAttribute('type', 'text');
         inpt.setAttribute('class', 'answersText');
@@ -39,6 +41,12 @@
         element.appendChild(br);
 
         hidenText.hidden = false;
+        answersCount++;
+         if(answersCount == 5 ){
+            buttonForAdd.hidden = true;
+        }
+        
+       
     }
 
     function addAnswers() {
@@ -46,22 +54,40 @@
         let questionText = someText[0].value;
         let answersTextList = document.getElementsByClassName('answersText');
         let answersCheckboxList = document.getElementsByClassName('itTrue');
-
         var jTextList = new Array();
         var jCheckboxList = new Array();
+        let isChecked = 0;
+
         for (let i = 0; i < answersTextList.length; i++) {
             jTextList[i] = answersTextList[i].value;
-            jCheckboxList[i] = answersCheckboxList[i].value;
+            if (answersCheckboxList[i].checked) {
+                jCheckboxList[i] = true;
+                isChecked = 1;
+            }
+            else {
+                jCheckboxList[i] = false;
+            }
         }
 
-        //JSON.parse(jTextList);
-        //JSON.parse(jCheckboxList);
-
-        var model = {                       //В этот js-объект я пытаюсь передать данные
+        if( questionText == ''){
+            alert("Введите текст вопроса");
+        }
+        else if(answersCount < 2){
+            alert("Вопрос должен иметь как минимум 2 варианта ответа");
+        }
+        else if(jTextList.includes('')){
+            alert("Варианты ответа не должны быть пустыми");
+        }
+        else if(isChecked == 0){
+            alert("Хотя бы один вариант ответа должен быть верным");
+        }
+        else{
+            var model = {                       
             questionText: questionText,
             jTextList: jTextList,
             jCheckboxList: jCheckboxList
         }
+        
 
         $.ajax({
             type: "POST",
@@ -71,9 +97,12 @@
             dataType: "html",
             traditional: true,
             success: function () {
+                alert("Question is added");
                 console.log('Question is added');
             }
         });
+        }
+        
     }
 
 

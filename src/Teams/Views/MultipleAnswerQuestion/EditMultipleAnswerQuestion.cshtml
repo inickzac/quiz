@@ -14,9 +14,11 @@
         {
             <div id="div[@i]" name="div">
                 <input type="checkbox" id="answers[@i]" name="editAnswers" value="@i" />
-                <label for="answers[@i]" id="@Answers[i].Id"><input value="@Answers[i].Text"></label>
+                <label for="answers[@i]" id="@Answers[i].Id"><input type="text" name="answersText" value="@Answers[i].Text"></label>
             </div>
         }
     </div>
     <input type="submit" />
 </form>
+
+

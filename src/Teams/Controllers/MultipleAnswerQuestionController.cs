@@ -53,34 +53,42 @@ namespace Teams.Controllers
             return View();
         }
 
-        public IActionResult ForCheck(string questionText)
-        {
-            ViewBag.Text = "questionText";
-            return View();
-        }
-
         [HttpPost]
         public IActionResult AddMultipleAnswerQuestion([FromBody] MAQDTOModel fromAjax)
         {
-            //MultipleAnswerQuestion question = new MultipleAnswerQuestion(questionText, answers);
-            //questionRepository.MethodForAdd(question);
-            string text;
-            if(fromAjax.jTextList == null)
+            List<MultipleAnswerQuestionOption> allAnswers = new List<MultipleAnswerQuestionOption>();
+            for (int i = 0; i < fromAjax.jTextList.Length; i++)
             {
-                 text = "yes";
+                allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.jTextList[i], fromAjax.jCheckboxList[i]));
             }
-            else
-            {
-                text = "no";
-            }
-            return View("ForCheck", text); 
+            questionRepository.MethodForAdd(new MultipleAnswerQuestion(fromAjax.questionText, allAnswers));
+
+            return View(); 
             
         }
         [HttpPost]
-        public IActionResult EditMultipleAnswerQuestion(List<MultipleAnswerQuestionOption> editAnswers, string questionText, string Id)
+        public IActionResult EditMultipleAnswerQuestion( int[] editAnswers, string[] answersText, string questionText, Guid Id)
         {
-            
-            return Content(questionText);
+            List<MultipleAnswerQuestionOption> allAnswers = new List<MultipleAnswerQuestionOption>();
+            int g = 0;
+            bool isRight;
+            for (int i = 0; i < answersText.Length; i++)
+            {
+                if (editAnswers[g] == i)
+                {
+                    isRight = true;
+                    g++;
+                }
+                else
+                {
+                    isRight = false;
+                }
+                allAnswers.Add(new MultipleAnswerQuestionOption(answersText[i], isRight));
+            }
+            MultipleAnswerQuestion question = questionRepository.PickById(Id);
+            question.UpdateQuestion(questionText, allAnswers);
+            questionRepository.SaveAllChanges();
+            return View();
         }
 
     }
