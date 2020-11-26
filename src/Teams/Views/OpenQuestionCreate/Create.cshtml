@@ -2,17 +2,58 @@
 @{ 
     ViewBag.Title = "Question creating";
 }
+@section scripts
+{
+    <script>
+        var answerContent = $('#answerInput').val();
+        var questionContent = $('#questionInput').val();
 
-<form asp-action="create" asp-controller="OpenQuestionCreate">
+        if (answerContent != '') {
+            var answerElem = document.getElementById('outAnswer');
+            answerElem.innerHTML = 'Parsed Answer: ';
+        }
+
+        if (questionContent != '') {
+            var questionElem = document.getElementById('outQuestion');
+            questionElem.innerHTML = 'Parsed Question: ';
+        }
+
+        $(".Markdown-form").submit[1](function () {
+            var questionElem = document.getElementById('outQuestion');
+            questionElem.innerHTML = 'Parsed Question: ';
+
+            var answerElem = document.getElementById('outAnswer');
+            answerElem.innerHTML = 'Parsed Answer: ';
+
+            return true;
+        });
+    </script>
+}
+
+<form class="Markdown-form" asp-action="create" asp-controller="OpenQuestionCreate">
     <div class="form-group">
         <label asp-for="Question" class="control-label">Question text</label>
-        <textarea type="text" asp-for="Question" class="form-control"></textarea>
+        <textarea id="questionInput" type="text" asp-for="Question" class="form-control"></textarea>
     </div>
     <div class="form-group">
         <label asp-for="Answer" class="control-label">Answer text</label>
-        <input type="text" asp-for="Answer" class="form-control" />
+        <input id="answerInput" type="text" asp-for="Answer" class="form-control" />
     </div>
     <div class="form-group">
         <input type="submit" value="Submit" class="btn btn-light" />
+        <input type="submit" value="Parse to Markdown" name="parsingBut" class="btn btn-light" />
     </div>
 </form>
+
+<div>
+    <p id ="outQuestion">
+        <markdown>
+            @Model.Question
+        </markdown>
+    </p>
+    <p id="outAnswer">
+        <markdown>
+            @Model.Answer
+        </markdown>
+    </p>
+</div>

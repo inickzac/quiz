@@ -20,14 +20,24 @@ namespace Teams.Controllers
             _db = db;
         }
 
-        public IActionResult Create()
+        public IActionResult Create(string question, string answer)
         {
-            return View();
+            OpenAnswerQuestionModel markdownModel = new OpenAnswerQuestionModel
+            {
+                Answer = answer,
+                Question= question
+            };
+
+            return View(markdownModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView)
+        public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView, string parsingBut)
         {
+            if(parsingBut != null)
+            {
+                return RedirectToAction("Create", "OpenQuestionCreate", new { question = modelForView.Question, answer = modelForView.Answer });
+            }
             OpenAnswerQuestion question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
             _db.OpenAnswerQuestions.Add(question);
             await _db.SaveChangesAsync();
