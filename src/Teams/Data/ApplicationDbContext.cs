@@ -13,6 +13,8 @@ namespace Teams.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<SingleSelectionQuestion> SingleSelectionQuestions { get; set; }
         public DbSet<MultipleAnswerQuestion> MultipleAnswerQuestions { get; set; }
+        public DbSet<Test> Tests { get; set; }
+        public DbSet<TestQuestion> TestQuestions { get; set; }
         public DbSet<ProgramCodeQuestion> ProgramCodeQuestions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

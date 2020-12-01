@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Teams.Domain.Test>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Tests</h1>
+
+<div class="form-row mb-2">
+    <input type="text" id="newTitleText" placeholder="Type test title" class="col-10 ml-2 mr-2 rounded" />
+    <button class="btn btn-outline-secondary col" id="confirmBtn">Create</button>
+</div>
+
+<table class="table" id="tests">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td align="right">
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+
+@section Scripts {
+    <script>
+        confirmBtn.onclick = function () {
+            var newTitle = $("#newTitleText").val();
+            $("#newTitleText").val("");
+            $.ajax({
+                type: "POST",
+                url: "/Test/Create",
+                data: JSON.stringify(newTitle),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var result = $('<div />').append(data).find('#tests').html();
+                    $('#tests').html(result);
+                }
+            });
+        }
+    </script>
+}

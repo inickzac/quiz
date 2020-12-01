@@ -1,0 +1,130 @@
+﻿@model Teams.Domain.DTO_Models.TestDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<h1>Edit</h1>
+
+<hr />
+<form asp-action="Edit" asp-controller="Test" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <table class="table">
+            <tr>
+                <th>
+                    Questions
+                </th>
+                <td align="right">
+                    <input type="button" id="btnAddQuestions" class="btn btn-outline-secondary" value="Add" />
+                </td>
+            </tr>
+            <tbody id="questionListPartial">
+                <partial name="_EditPartial" model="Model">
+            </tbody>
+        </table>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<div id="addQuestionPopup" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="modalBtnSubmit" class="btn btn-outline-success" data-dismiss="modal">
+                    Submit
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).on('click', 'input[name ="deleteQuestion"]', function () {
+            var name = $(this).attr('id');
+            var jsList = JSON.parse($("#questionListJson").val());
+            var model = {
+                Id: "@Model.Id",
+                Title: "@Model.Title",
+                Questions: jsList
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Test/DeleteQuestion/" + name,
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $('#questionListPartial').html(data);
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#modalBtnSubmit").off().click(function () {
+            var path = "?";
+            $('input:checkbox:checked').each(function () {
+                path = path + "id=" + $(this).prop('id') + "&";
+            });
+            path = path.substring(0, path.length - 1);
+            var jsList = JSON.parse($("#questionListJson").val());
+            var model = {
+                Id: "@Model.Id",
+                Title: "@Model.Title",
+                Questions: jsList
+            };
+            $.ajax({
+                type: "POST",
+                url: "/Test/AddQuestion/" + path,
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    $('#questionListPartial').html(data);
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#btnAddQuestions").off().on('click', function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Get", "Question")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var $table = $('<table>');
+                    var tr = "<tr><th>Question</th><th align=\"right\">Select</th></tr>"
+                    $table.append(tr)
+                    for (var i = 0; i < result.length; i++) {
+                        var disabled = " ";
+                        if ($("[name='trMain']").is("#" + result[i].id)) {
+                            disabled = " checked disabled ";
+                        }
+                        tr = "<tr id=" + result[i].id + "><td>" + result[i].text + "</td><td align=\"right\"><input id=" + result[i].id + " type=\"checkbox\" " + disabled + "></input></td></tr>"
+                        $table.append(tr);
+                    }
+                    $("#addQuestionPopup .modal-body").html($table[0].outerHTML);
+                    $("#addQuestionPopup").modal("show");
+                },
+                error: function () {
+                    alert("Content load failed.");
+                }
+            });
+        });
+    </script>
+}
