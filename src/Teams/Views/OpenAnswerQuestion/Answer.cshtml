@@ -1,4 +1,5 @@
 ﻿@model Teams.Models.OpenAnswerQuestionModel
+@using Westwind.AspNetCore.Markdown
 @{
     ViewData["Title"] = "Answer";
 }
@@ -13,9 +14,8 @@
 </style>
 
 <div>
-    <h3>
-        @Model.Question
-    </h3>
+    
+    <div>@Markdown.ParseHtmlString(Model.Question)</div>
 
     <input type="text" readonly name="answer" class="@(Model.IsAnswer ? "success" : "fail")" value='@Model.Answer' />
 </div>
