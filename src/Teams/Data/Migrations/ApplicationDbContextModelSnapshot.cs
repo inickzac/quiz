@@ -329,6 +329,28 @@ namespace Teams.Data.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("Teams.Models.QuestionAnswerPair", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AnswerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TestRunID_FK")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestRunID_FK");
+
+                    b.ToTable("QuestionAnswerPairs");
+                });
+
             modelBuilder.Entity("Teams.Models.TestRun", b =>
                 {
                     b.Property<Guid>("Id")
@@ -458,6 +480,13 @@ namespace Teams.Data.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Teams.Models.QuestionAnswerPair", b =>
+                {
+                    b.HasOne("Teams.Models.TestRun", "TestRun")
+                        .WithMany("QuestionAnswerPairs")
+                        .HasForeignKey("TestRunID_FK");
                 });
 #pragma warning restore 612, 618
         }

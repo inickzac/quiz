@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Domain;
+using Teams.Models;
 
 namespace Teams.Data
 {
@@ -17,5 +18,7 @@ namespace Teams.Data
         public DbSet<TestQuestion> TestQuestions { get; set; }
         int SaveChanges();
         public DbSet<OpenAnswerQuestion> OpenAnswerQuestions { get; set;}
+        public DbSet<TestRun> Testrun { get; set; }
+        public DbSet<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
     }
 }

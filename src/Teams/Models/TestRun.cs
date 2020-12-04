@@ -18,7 +18,7 @@ namespace Teams.Models
         /// <summary>
         /// Stores the ID of the current TestRun user
         /// </summary>
-        [ForeignKey("TestedUserID_FK")] public string TestedUserId { get; private set; }
+        [ForeignKey("TestedUserID_FK")] public string TestedUserId { get; set; }
         /// <summary>
         /// Stores the ID of the specified test
         /// </summary>
@@ -32,23 +32,15 @@ namespace Teams.Models
         /// Stores values for questionId and answer.
         /// </summary>
         /// <summary>
-        public ICollection<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
-        /// <summary>
-        /// Sets the user by Guid
-        /// </summary>
-        /// <param name="user"></param>
-        public void SetUser(IdentityUser user)
-        {
-            TestedUserId = user.Id;
-        }
+        [ForeignKey("QuestionAnswerPairs_FK")]public List<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
         /// <summary>
         /// Starts the test, sets a new test by its id, sets a new user by his/her id. Sets the InProgress field to true.
         /// </summary>
-        /// <param name="testDto">Guid of the test that is added to the current Test Run</param>
+        /// <param name="testDtoId">Guid of the test that is added to the current Test Run</param>
         /// <param name="userUd">Guid of the user of the current Test Run</param>
-        public void StartTestRun(Guid testDto, string userUd)
+        public void StartTestRun(Guid testDtoId, string userUd)
         {
-            TestId = testDto;
+            TestId = testDtoId;
             TestedUserId = userUd;
             InProgress = true;
         }
@@ -62,7 +54,7 @@ namespace Teams.Models
 
         public void AddAnswer(Guid questionId, Guid answerId)
         {
-            QuestionAnswerPair questionAnswerPair = new QuestionAnswerPair(this.Id);
+            QuestionAnswerPair questionAnswerPair = new QuestionAnswerPair {TestRun = this};
             questionAnswerPair.Add(questionId, answerId);
             QuestionAnswerPairs.Add(questionAnswerPair);
         }

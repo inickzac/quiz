@@ -18,6 +18,10 @@
     <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.Designer.cs" />
     <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.cs" />
     <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.cs" />
+    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.cs" />
+    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,13 +11,7 @@ namespace Teams.Models
     {
         public Guid QuestionId { get; private set; }
         public Guid AnswerId { get; private set; }
-        [ForeignKey("TestRunID_FK")]
-        public Guid TestRunId { get; private set; }
-
-        public QuestionAnswerPair(Guid testRunId)
-        {
-            TestRunId = testRunId;
-        }
+        [ForeignKey("TestRun_FK")] public TestRun TestRun { get; set; }
 
         public void Add(Guid questionId, Guid answerId)
         {
