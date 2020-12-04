@@ -25,5 +25,13 @@ namespace Teams.Data
             : base(options)
         {
         }
+        
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<TestRun>()
+                .HasMany(c => c.QuestionAnswerPairs);
+            
+            base.OnModelCreating(builder);
+        }
     }
 }

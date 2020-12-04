@@ -32,7 +32,7 @@ namespace Teams.Models
         /// Stores values for questionId and answer.
         /// </summary>
         /// <summary>
-        public QuestionAnswerPair QuestionAnswerPair { get; set; }
+        public ICollection<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
         /// <summary>
         /// Sets the user by Guid
         /// </summary>
@@ -62,7 +62,9 @@ namespace Teams.Models
 
         public void AddAnswer(Guid questionId, Guid answerId)
         {
-            QuestionAnswerPair.Add(questionId, answerId);
+            QuestionAnswerPair questionAnswerPair = new QuestionAnswerPair(this.Id);
+            questionAnswerPair.Add(questionId, answerId);
+            QuestionAnswerPairs.Add(questionAnswerPair);
         }
     }
 }
