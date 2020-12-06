@@ -1,0 +1,53 @@
+﻿@model Teams.Models.TestRunViewModel
+
+@{
+    ViewBag.Title = "Tests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Available Tests</h1>
+<h3>Current user: @Model.ApplicationUser.UserName</h3>
+<h3>Select a test to start examination</h3>
+
+
+<table class="table" id="tests"> 
+    @foreach (var item in Model.Tests) 
+    { 
+        <tr> 
+            <td> 
+                @Html.Display(item.Title) 
+            </td> 
+            <td align="right"> 
+                @if (Model.TakenTestsIds.Contains(item.Id))
+                {
+                    @Html.Display("Retake / Resume") 
+                }
+                else
+                {
+                    @Html.Display("Take") 
+                }
+                $1$ <a asp-action="Take Test" asp-route-id="@item.Id">Edit</a> | #1# 
+            </td> 
+        </tr> 
+    }    
+</table> 
+
+@section Scripts {
+    <script>
+        @* confirmBtn.onclick = function () {
+            var newTitle = $("#newTitleText").val();
+            $("#newTitleText").val("");
+            $.ajax({
+                type: "POST",
+                url: "/Test/Create",
+                data: JSON.stringify(newTitle),
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var result = $('<div />').append(data).find('#tests').html();
+                    $('#tests').html(result);
+                }
+            }); *@
+        }
+    </script>
+}

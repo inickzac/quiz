@@ -19,7 +19,8 @@ namespace Teams.Data
         public DbSet<ProgramCodeQuestion> ProgramCodeQuestions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<TestRun> Testrun { get; set; }
-        public DbSet<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
+        public DbSet<QuestionAnswer> QuestionAnswerPairs { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -29,7 +30,8 @@ namespace Teams.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<TestRun>().HasMany(t => t.QuestionAnswerPairs).WithOne(e => e.TestRun);
+            builder.Entity<TestRun>().HasMany(t => t.QuestionAnswers).WithOne(e => e.TestRun);
+            builder.Entity<ApplicationUser>().HasMany(u => u.TakenTests).WithOne(e => e.TestedUser).HasForeignKey(k => k.TestedUserID);
         }
     }
 }

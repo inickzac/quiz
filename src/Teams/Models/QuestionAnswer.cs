@@ -7,11 +7,12 @@ using Teams.Domain;
 
 namespace Teams.Models
 {
-    public class QuestionAnswerPair : Entity
+    public class QuestionAnswer : Entity
     {
         public Guid QuestionId { get; private set; }
         public Guid AnswerId { get; private set; }
         [ForeignKey("TestRun_FK")] public TestRun TestRun { get; set; }
+
 
         public void Add(Guid questionId, Guid answerId)
         {

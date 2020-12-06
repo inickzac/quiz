@@ -19,6 +19,7 @@ namespace Teams.Data
         int SaveChanges();
         public DbSet<OpenAnswerQuestion> OpenAnswerQuestions { get; set;}
         public DbSet<TestRun> Testrun { get; set; }
-        public DbSet<QuestionAnswerPair> QuestionAnswerPairs { get; set; }
+        public DbSet<QuestionAnswer> QuestionAnswerPairs { get; set; }
+        public DbSet<Answer> Answers { get; set; }
     }
 }

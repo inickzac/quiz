@@ -6,9 +6,10 @@ using Teams.Models;
 
 namespace Teams.Data.TestRunRepos
 {
-    interface ITestRunRepository
+    public interface ITestRunRepository
     {
         public List<TestRun> GetAll();
         public TestRun GetById(Guid id);
+        public List<TestRun> GetAllByUserId(string id);
     }
 }

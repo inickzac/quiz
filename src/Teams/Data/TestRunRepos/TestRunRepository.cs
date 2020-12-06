@@ -8,7 +8,7 @@ namespace Teams.Data.TestRunRepos
 {
     public class TestRunRepository : ITestRunRepository
     {
-        private IApplicationDbContext _dbContext;
+        private readonly IApplicationDbContext _dbContext;
 
         public TestRunRepository(IApplicationDbContext dbContext)
         {
@@ -23,6 +23,11 @@ namespace Teams.Data.TestRunRepos
         public TestRun GetById(Guid id)
         {
             return _dbContext.Testrun.Find(id);
+        }
+
+        public List<TestRun> GetAllByUserId(string id)
+        {
+            return GetAll().Where(t => t.TestedUserID == id).ToList();
         }
     }
 }
