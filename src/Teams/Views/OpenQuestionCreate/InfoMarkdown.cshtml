@@ -1,0 +1,7 @@
+﻿@using Westwind.AspNetCore.Markdown
+@model Teams.Models.OpenAnswerQuestionModel
+
+    <div>
+        <p>Parsed Question:</p>
+        <p>@Markdown.ParseHtmlString(Model.Question)</p>
+    </div>

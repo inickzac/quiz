@@ -1,4 +1,5 @@
 ﻿@model ProgramCodeQuestionViewModel
+@using Westwind.AspNetCore.Markdown
     <head>
         <script>
             function check_file() {
@@ -20,7 +21,7 @@
         </script>
     </head>
     <body>
-        <h2>@Model.Text</h2>
+        @Markdown.ParseHtmlString(Model.Text)
         @if (!(Model.AlertText is null))
         {
             <script>alert('@Model.AlertText')</script>

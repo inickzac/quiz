@@ -20,24 +20,14 @@ namespace Teams.Controllers
             _db = db;
         }
 
-        public IActionResult Create(string question, string answer)
+        public IActionResult Create()
         {
-            OpenAnswerQuestionModel markdownModel = new OpenAnswerQuestionModel
-            {
-                Answer = answer,
-                Question= question
-            };
-
-            return View(markdownModel);
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView, string parsingBut)
-        {
-            if(parsingBut != null)
-            {
-                return RedirectToAction("Create", "OpenQuestionCreate", new { question = modelForView.Question, answer = modelForView.Answer });
-            }
+        public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView)
+        {          
             OpenAnswerQuestion question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
             _db.OpenAnswerQuestions.Add(question);
             await _db.SaveChangesAsync();
@@ -67,6 +57,15 @@ namespace Teams.Controllers
             question.UpdateQuestion(modelForView.Question, modelForView.Answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
+        }
+
+        public IActionResult InfoMarkdown(string questionMarkdown)
+        {
+            OpenAnswerQuestionModel markdownModel = new OpenAnswerQuestionModel
+            {               
+                Question = questionMarkdown
+            };
+            return View(markdownModel);
         }
     }
 }

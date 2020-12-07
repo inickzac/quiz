@@ -1,10 +1,11 @@
 ﻿@model Teams.Domain.SingleSelectionQuestion
+@using Westwind.AspNetCore.Markdown
 
 @{
     ViewData["Title"] = "SingleSelectionQuestion";
 }
 
-<h1>@Model.Text</h1>
+@Markdown.ParseHtmlString(Model.Text)
 
 <div>
     <hr />

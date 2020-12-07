@@ -1,4 +1,5 @@
 ﻿@model Teams.Models.MultipleAnswerQuestionViewModel
+@using Westwind.AspNetCore.Markdown
 @{
     ViewData["Title"] = "QuestForm";
     var Answers = Model.SourceQuestion.Answers.ToList();
@@ -9,7 +10,7 @@
         border-color: green;
     }
 </style>
-<h2>@(Model.SourceQuestion.Text)</h2>
+@Markdown.ParseHtmlString(Model.SourceQuestion.Text)
 @using (Html.BeginForm("MultipleAnswerQuestionForm", "MultipleAnswerQuestion", FormMethod.Get))
 {
     <input readonly hidden name="Id" value="@Model.SourceQuestion.Id" />
