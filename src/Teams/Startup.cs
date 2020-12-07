@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -18,6 +19,7 @@ using Teams.Data.TestRepos;
 using Teams.Data.QuestionRepos;
 using Teams.Data.Repositories;
 using Teams.Data.TestRunRepos;
+using Teams.Domain;
 using Teams.Models;
 
 namespace Teams
@@ -52,6 +54,7 @@ namespace Teams
             //     .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
