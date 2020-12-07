@@ -14,48 +14,43 @@ namespace Teams.Controllers
     {
         private ITestRunRepository _testRunRepository;
         private IAnswerRepository _answerRepository;
-        private IQuestionAnswerPairRepository _questionAnswerPairRepository;
         private IApplicationDbContext _applicationDbContext;
-        private ITestRepository _testRepository;
+        private ITestRepository _testContext;
         private TestRun _currentTestRun;
         private Test _currentTest;
         private TestQuestion _testQuestion;
         private ApplicationUser _currentUser;
 
-        public TestRunController(ITestRunRepository testRunRepository, IAnswerRepository answerRepository, IQuestionAnswerPairRepository questionAnswerPairRepository, IApplicationDbContext applicationDbContext, ITestRepository testRepository, ApplicationUser user)
+        private List<Guid> _takenTestsIds;
+        public TestRunController(ITestRunRepository testRunRepository, IAnswerRepository answerRepository, IApplicationDbContext applicationDbContext, ITestRepository testRepository, ApplicationUser user)
         {
             _testRunRepository = testRunRepository;
             _answerRepository = answerRepository;
-            _questionAnswerPairRepository = questionAnswerPairRepository;
             _applicationDbContext = applicationDbContext;
-            _testRepository = testRepository;
+            _testContext = testRepository;
             _currentUser = user;
+            _takenTestsIds = _testRunRepository.GetAllByUserId(_currentUser.Id).Select(t => t.Id).ToList();
         }
         
         public IActionResult Index()
         {
-            List<Test> tests = _testRepository.GetAll();
-            List<Guid> takenTestsIds = _testRunRepository.GetAllByUserId(_currentUser.Id).Select(t => t.Id).ToList();
-            return View(new TestRunViewModel() {ApplicationUser = _currentUser, TakenTestsIds = takenTestsIds, Tests = tests});
+            List<Test> tests = _testContext.GetAll();
+            return View(new TestRunIndexModel() {ApplicationUser = _currentUser, TakenTestsIds = _takenTestsIds, Tests = tests});
         } 
 
-        public void StartTestRun(string userId, Guid testId)
+        public void Start(Guid testId)
         {
-            _currentTestRun = _testRunRepository.GetAllByUserId(userId).Find(x => x.TestId == testId);
-            if (_currentTestRun == null)
-                Create(userId, testId);
-            var currentQuestions = _testRepository.Get(testId).TestQuestions;
-            foreach (TestQuestion question in currentQuestions)
-            {
-                
-            }
-            
-            var currentUserTestRuns = _testRunRepository.GetAllByUserId(userId);
+            Test currentTest = _testContext.Get(testId);
+            if (!_testRunRepository.GetAllByUserId(_currentUser.Id).Any(x => x.TestId == testId))_currentTestRun = new TestRun(_currentUser, currentTest);
+            _applicationDbContext.Testrun.Add(_currentTestRun);
+            _applicationDbContext.SaveChanges();
+            //Pass the TestRun to the controller. If the 
         }
 
         [HttpPost]
-        public void Create([FromBody] string userId, [FromBody] Guid testId)
+        public void Finish()
         {
+            _currentTestRun.EndTestRun();
            // _currentTestRun = new TestRun(){TestedUserId = userId, TestId = testId}; 
         }
     }

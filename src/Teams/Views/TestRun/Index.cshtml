@@ -1,4 +1,4 @@
-﻿@model Teams.Models.TestRunViewModel
+﻿@model Teams.Models.TestRunIndexModel
 
 @{
     ViewBag.Title = "Tests";
@@ -26,28 +26,7 @@
                 {
                     @Html.Display("Take") 
                 }
-                $1$ <a asp-action="Take Test" asp-route-id="@item.Id">Edit</a> | #1# 
             </td> 
         </tr> 
     }    
-</table> 
-
-@section Scripts {
-    <script>
-        @* confirmBtn.onclick = function () {
-            var newTitle = $("#newTitleText").val();
-            $("#newTitleText").val("");
-            $.ajax({
-                type: "POST",
-                url: "/Test/Create",
-                data: JSON.stringify(newTitle),
-                contentType: "application/json; charset=utf-8",
-                dataType: "html",
-                success: function (data) {
-                    var result = $('<div />').append(data).find('#tests').html();
-                    $('#tests').html(result);
-                }
-            }); *@
-        }
-    </script>
-}
+</table>

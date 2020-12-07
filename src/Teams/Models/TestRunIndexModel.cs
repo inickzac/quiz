@@ -5,7 +5,7 @@ using System;
 
 namespace Teams.Models
 {
-    public class TestRunViewModel
+    public class TestRunIndexModel
     {
         public List<Guid> TakenTestsIds {get; set;}
         public ApplicationUser ApplicationUser {get; set;}
