@@ -1,50 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Teams-78C7596C-0459-4D03-9610-8092B16DBE33</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.cs" />
-    <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.cs" />
-    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.cs" />
-    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.cs" />
-    <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.cs" />
-    <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.cs" />
-    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.cs" />
-    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.cs"/>
+    <Compile Remove="Data\Migrations\20200925133258_UpdateMultipleAnswerQuestionOption.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.cs"/>
+    <Compile Remove="Data\Migrations\20200928131612_MultipleAnswerQuestionOptionList.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.cs"/>
+    <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.cs"/>
+    <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.cs"/>
+    <Compile Remove="Data\Migrations\20201203084553_AddTestRunTable.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.cs"/>
+    <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.Designer.cs"/>
+    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.cs"/>
+    <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.Designer.cs"/>
   </ItemGroup>
-
   <ItemGroup>
-    <None Remove="Views\ProgramCodeQuestion\ProgramCodeQuestionCheks.ts" />
+    <None Remove="Views\ProgramCodeQuestion\ProgramCodeQuestionCheks.ts"/>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3"/>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8"/>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4"/>
   </ItemGroup>
-
   <ItemGroup>
-    <Folder Include="Data\Migrations\TestRunRepos\" />
+    <Folder Include="Data\Migrations\TestRunRepos\"/>
   </ItemGroup>
-
 </Project>

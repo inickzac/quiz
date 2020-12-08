@@ -29,6 +29,7 @@ namespace Teams.Data
         {
             base.OnModelCreating(builder);
             builder.Entity<TestRun>().HasOne(u => u.TestedUser).WithMany(e => e.TestsTaken).HasForeignKey(k => k.TestedUserID);
+            builder.Entity<TestRun>().HasMany(u => u.Answers).WithOne(e => e.TestRun).HasForeignKey(k => k.TestRunFK);
         }
     }
 }

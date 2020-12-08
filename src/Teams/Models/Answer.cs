@@ -7,25 +7,24 @@ using Teams.Domain;
 
 namespace Teams.Models
 {
+    /// <summary>
+    /// Clqass Answer contains answers to current Test question. Answer is stored as string. Multiple answers are delimited with /*/ special characters
+    /// </summary>
     public class Answer : Entity
     {
-        private string _simpleAnswer;
-        private ICollection<string> _complexAnswer;
+        public string AnswerText {get; private set;};
+        public TestRun TestRun { get; set; }
+        public Guid TestRunFK { get; set; }
 
         public void SetAnswer(string answer)
         {
-            _simpleAnswer = answer;
+            AnswerText = answer;
         }
 
         public void SetAnswer(ICollection<string> answer)
         {
-            _complexAnswer = answer;
-        }
-
-        public object GetAnswer()
-        {
-            if (_simpleAnswer?.Length == 0) return _complexAnswer;
-            return _simpleAnswer;
+            foreach(var n in answer)
+            AnswerText += "/*/" + n;
         }
     }
 }

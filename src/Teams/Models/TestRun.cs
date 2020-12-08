@@ -15,11 +15,21 @@ namespace Teams.Models
     /// </summary>
     public class TestRun : Entity
     {
-        public TestRun(ApplicationUser testedUser, TestDTO test)
+        
+        
+        public string TestedUserID { get; set; }
+        public ApplicationUser TestedUser { get; set; }
+        [ForeignKey("Test_FK")] public Guid TestId { get; set; }
+        public List<Test> Tests {get; set;}
+        public List<Answer> Answers {get; set;}
+        public bool InProgress { get; private set; }
+
+        public int AnswersCounter { get; private set; }
+
+        public TestRun(ApplicationUser testedUser, Test test)
         {
             TestedUserID = testedUser.Id;
             TestedUser = testedUser;
-            Test = test;
             TestId = test.Id;
             AnswersCounter = 0;
             InProgress = true;
@@ -30,21 +40,11 @@ namespace Teams.Models
             AnswersCounter = 0;
             InProgress = false;
         }
-        
-        public string TestedUserID { get; set; }
-        public ApplicationUser TestedUser { get; set; }
-        [ForeignKey("Test_FK")] public Guid TestId { get; set; }
-        public TestDTO Test {get; set;}
-        public bool InProgress { get; private set; }
-
-        public int AnswersCounter { get; private set; }
 
 
 
-        public void StartTestRun(Guid testDtoId, string userId)
+        public void StartTestRun()
         {
-            TestId = testDtoId;
-            TestedUserID = userId;
             InProgress = true;
         }
 
@@ -56,7 +56,6 @@ namespace Teams.Models
 
         public void AddAnswer(Guid questionId, Guid answerId)
         {
-            
             AnswersCounter++;
         }
     }

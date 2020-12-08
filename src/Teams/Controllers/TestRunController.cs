@@ -7,7 +7,6 @@ using Teams.Domain;
 using Teams.Models;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using Teams.Domain.DTO_Models;
 
 namespace Teams.Controllers
@@ -19,15 +18,13 @@ namespace Teams.Controllers
         private IApplicationDbContext _applicationDbContext;
         private ITestRepository _testContext;
         private TestRun _currentTestRun;
-        private TestDTO _currentTest;
+        private Test _currentTest;
         private TestQuestion _testQuestion;
         private ApplicationUser _currentUser;
-        private IMapper _mapper;
 
         private List<Guid> _takenTestsIds;
-        public TestRunController(IMapper mapper, ITestRunRepository testRunRepository, IAnswerRepository answerRepository, IApplicationDbContext applicationDbContext, ITestRepository testRepository, ApplicationUser user)
+        public TestRunController(ITestRunRepository testRunRepository, IAnswerRepository answerRepository, IApplicationDbContext applicationDbContext, ITestRepository testRepository, ApplicationUser user)
         {
-            _mapper = mapper;
             _testRunRepository = testRunRepository;
             _answerRepository = answerRepository;
             _applicationDbContext = applicationDbContext;
@@ -44,8 +41,7 @@ namespace Teams.Controllers
 
         public void Start(Guid testId)
         {
-            Test currentTest = _testContext.Get(testId);
-            if (!_testRunRepository.GetAllByUserId(_currentUser.Id).Any(x => x.TestId == testId))_currentTestRun = new TestRun(_currentUser, currentTest);
+            if (!_testRunRepository.GetAllByUserId(_currentUser.Id).Any(x => x.TestId == testId)) _currentTestRun = new TestRun(_currentUser, _currentTest);
             _applicationDbContext.Testrun.Add(_currentTestRun);
             _applicationDbContext.SaveChanges();
             //Pass the TestRun to the controller. If the 
