@@ -75,7 +75,7 @@ namespace Teams.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> GetUserTestRuns(string userId)
+        public async Task<IActionResult> ShowUserTestRuns(string userId)
         {
             var testRuns = await _testRunRepository.GetAllByUserAsync(userId);
             return RedirectToAction("Index");
