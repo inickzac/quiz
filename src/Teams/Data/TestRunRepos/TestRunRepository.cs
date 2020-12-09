@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Teams.Models;
+using Microsoft.EntityFrameworkCore;
+using Teams.Domain;
 
 namespace Teams.Data.TestRunRepos
 {
@@ -15,19 +17,17 @@ namespace Teams.Data.TestRunRepos
             _dbContext = dbContext;
         }
 
-        public List<TestRun> GetAll()
+        public async Task<List<TestRun>> GetAllAsync() => await _dbContext.Testrun.ToListAsync();
+
+        public async Task<TestRun> GetByIdAsync(Guid id)
         {
-            return _dbContext.Testrun.ToList();
+            return await _dbContext.Testrun.FindAsync(id);
         }
 
-        public TestRun GetById(Guid id)
+        public async Task<List<TestRun>> GetAllByUserAsync(string id)
         {
-            return _dbContext.Testrun.Find(id);
-        }
-
-        public List<TestRun> GetAllByUserId(string id)
-        {
-            return GetAll().Where(t => t.TestedUserID == id).ToList();
+            List<TestRun> testRuns = await GetAllAsync();
+            return testRuns.Where(x => x.TestedUserID == id).ToList();
         }
     }
 }

@@ -7,6 +7,8 @@ using Teams.Domain;
 using Teams.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Teams.Domain.DTO_Models;
 
 namespace Teams.Controllers
@@ -14,44 +16,83 @@ namespace Teams.Controllers
     public class TestRunController : Controller
     {
         private ITestRunRepository _testRunRepository;
-        private IAnswerRepository _answerRepository;
-        private IApplicationDbContext _applicationDbContext;
-        private ITestRepository _testContext;
-        private TestRun _currentTestRun;
-        private Test _currentTest;
-        private TestQuestion _testQuestion;
-        private ApplicationUser _currentUser;
+        private ApplicationDbContext _applicationDbContext;
+        private readonly ApplicationUser _applicationUser;
 
-        private List<Guid> _takenTestsIds;
-        public TestRunController(ITestRunRepository testRunRepository, IAnswerRepository answerRepository, IApplicationDbContext applicationDbContext, ITestRepository testRepository, ApplicationUser user)
+        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, ApplicationUser applicationUser)
         {
             _testRunRepository = testRunRepository;
-            _answerRepository = answerRepository;
             _applicationDbContext = applicationDbContext;
-            _testContext = testRepository;
-            _currentUser = user;
-            _takenTestsIds = _testRunRepository.GetAllByUserId(_currentUser.Id).Select(t => t.Id).ToList();
+            _applicationUser = applicationUser;
         }
         
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            List<Test> tests = _testContext.GetAll();
-            return View(new TestRunIndexModel() {ApplicationUser = _currentUser, TakenTestsIds = _takenTestsIds, Tests = tests});
-        } 
-
-        public void Start(Guid testId)
+            List<TestRun> testRuns = await  _testRunRepository.GetAllByUserAsync(_applicationUser.Id); 
+            return View(testRuns);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Index(string userId)
         {
-            if (!_testRunRepository.GetAllByUserId(_currentUser.Id).Any(x => x.TestId == testId)) _currentTestRun = new TestRun(_currentUser, _currentTest);
-            _applicationDbContext.Testrun.Add(_currentTestRun);
-            _applicationDbContext.SaveChanges();
-            //Pass the TestRun to the controller. If the 
+            List<TestRun> testRuns = await  _testRunRepository.GetAllByUserAsync(userId); 
+            return View(testRuns);
+        }
+        [HttpGet]
+        public IActionResult Start(Guid testRunId, string userId)
+        {
+            if (_testRunRepository.GetAllAsync().Result.All(x => x.Id != testRunId))
+            {
+                return NotFound();
+            }
+            TestRun testRun = _testRunRepository.GetAllAsync().Result.FirstOrDefault(x => x.TestId == testRunId);
+            return View("Run", testRun);
         }
 
         [HttpPost]
-        public void Finish()
+        private async Task<bool> Create(Guid testId)
         {
-            _currentTestRun.EndTestRun();
-           // _currentTestRun = new TestRun(){TestedUserId = userId, TestId = testId}; 
+            Test test = await _applicationDbContext.Tests.FindAsync(testId);
+            TestRun testRun = new TestRun(_applicationUser, test);
+            await SaveTestRun(testRun);
+            return true;
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddAnswer(Answer answer, Guid testRunTd)
+        {
+            await _applicationDbContext.Answers.AddAsync(answer);
+            await _applicationDbContext.SaveChangesAsync();
+            _testRunRepository.GetByIdAsync(testRunTd).Result.AnswersCounter++;
+            return RedirectToAction("Start");
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Finish(TestRun testRun)
+        {
+            testRun.InProgress = false;
+            await SaveTestRun(testRun);
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetUserTestRuns(string userId)
+        {
+            var testRuns = await _testRunRepository.GetAllByUserAsync(userId);
+            return RedirectToAction("Index");
+        }
+
+        private async Task<bool> SaveTestRun(TestRun testRun)
+        {
+            try
+            {
+                await _applicationDbContext.Testrun.AddAsync(testRun);
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }

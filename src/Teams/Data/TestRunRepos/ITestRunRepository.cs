@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Teams.Domain;
 using Teams.Models;
 
 namespace Teams.Data.TestRunRepos
 {
     public interface ITestRunRepository
     {
-        public List<TestRun> GetAll();
-        public TestRun GetById(Guid id);
-        public List<TestRun> GetAllByUserId(string id);
+        public Task<List<TestRun>> GetAllAsync();
+        public Task<TestRun> GetByIdAsync(Guid id);
+        public Task<List<TestRun>> GetAllByUserAsync(string id);
     }
 }

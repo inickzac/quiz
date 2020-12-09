@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,11 @@ namespace Teams.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<Answer>()
+                .Property(e => e.AnswerText)
+                .HasConversion(
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
             builder.Entity<TestRun>().HasOne(u => u.TestedUser).WithMany(e => e.TestsTaken).HasForeignKey(k => k.TestedUserID);
             builder.Entity<TestRun>().HasMany(u => u.Answers).WithOne(e => e.TestRun).HasForeignKey(k => k.TestRunFK);
         }
