@@ -28,22 +28,22 @@ namespace Teams.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(OpenAnswerQuestionModel modelForView)
         {
-            OpenAnswerQuestionAsync questionAsync = new OpenAnswerQuestionAsync(modelForView.Question, modelForView.Answer);
-            _db.OpenAnswerQuestions.Add(questionAsync);
+            OpenAnswerQuestion question = new OpenAnswerQuestion(modelForView.Question, modelForView.Answer);
+            _db.OpenAnswerQuestions.Add(question);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            OpenAnswerQuestionAsync questionAsync = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == id);
-            if (questionAsync != null)
+            OpenAnswerQuestion question = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == id);
+            if (question != null)
             {
                 OpenAnswerQuestionModel modelForView = new OpenAnswerQuestionModel
                 { 
-                    Question = questionAsync.Text,
-                    Answer = questionAsync.Answer,
-                    Id = questionAsync.Id 
+                    Question = question.Text,
+                    Answer = question.Answer,
+                    Id = question.Id 
                 };
 
                 return View(modelForView);
@@ -53,8 +53,8 @@ namespace Teams.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(OpenAnswerQuestionModel modelForView)
         {
-            OpenAnswerQuestionAsync questionAsync = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == modelForView.Id);
-            questionAsync.UpdateQuestion(modelForView.Question, modelForView.Answer);
+            OpenAnswerQuestion question = await _db.OpenAnswerQuestions.FirstOrDefaultAsync(p => p.Id == modelForView.Id);
+            question.UpdateQuestion(modelForView.Question, modelForView.Answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
         }

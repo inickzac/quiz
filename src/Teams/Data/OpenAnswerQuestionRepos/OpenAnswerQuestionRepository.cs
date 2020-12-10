@@ -14,7 +14,7 @@ namespace Teams.Data.OpenAnswerQuestionRepos
         {
             this.context = context;
         }
-        public async Task<OpenAnswerQuestionAsync> GetAsync(Guid id)
+        public async Task<OpenAnswerQuestion> GetAsync(Guid id)
         {
             return await context.OpenAnswerQuestions.FirstOrDefaultAsync(x => x.Id == id);
         }

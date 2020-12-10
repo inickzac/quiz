@@ -3,17 +3,17 @@ using Teams.Models;
 
 namespace Teams.Domain
 {
-    public class OpenAnswerQuestionAsync : Question
+    public class OpenAnswerQuestion : Question
     {
     
         public string Answer { get; private set; }
 
-        public OpenAnswerQuestionAsync(string text, string answer) : base(text)
+        public OpenAnswerQuestion(string text, string answer) : base(text)
         {
             Answer = answer;
         }
 
-        public OpenAnswerQuestionAsync(string text) : base(text)
+        public OpenAnswerQuestion(string text) : base(text)
         {
         }
 

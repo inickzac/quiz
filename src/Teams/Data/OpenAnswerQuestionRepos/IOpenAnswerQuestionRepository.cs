@@ -8,6 +8,6 @@ namespace Teams.Data.OpenAnswerQuestionRepos
 {
     public interface IOpenAnswerQuestionRepository
     {
-        public Task<OpenAnswerQuestionAsync> GetAsync(Guid id);
+        public Task<OpenAnswerQuestion> GetAsync(Guid id);
     }
 }
