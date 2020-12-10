@@ -1,24 +1,195 @@
 ﻿@model Teams.Models.MultipleAnswerQuestionViewModel
+@using System.Linq;
 
 @{
-    var Answers = Model.SourceQuestion.Answers.ToList();
+    var answers = Model.SourceQuestion.Answers.ToList();
+    var answersText = Model.SourceQuestion.Answers.Select(x=>x.Text);
 
 }
+<h3>Введите текст вариантов ответа и отметьте правильные</h3>
+<input hidden name="Id" value="@Model.SourceQuestion.Id" />
+<br>
 
-<form method="post">
-    <h3>Введите текст вариантов ответа и отметьте правильные</h3>
-    <input style="visibility:collapse" name="Id" value="@Model.SourceQuestion.Id" /><br>
-    <input type="text" name="questionText" value="@(Model.SourceQuestion.Text)" />
+<input type="text" name="questionText" value="@(Model.SourceQuestion.Text)" />
+
+<body onload="addFromBd()">
     <div id="options_container">
-        @for (int i = 0; i < Model.SourceQuestion.Answers.Count; i++)
-        {
-            <div id="div[@i]" name="div">
-                <input type="checkbox" id="answers[@i]" name="editAnswers" value="@i" />
-                <label for="answers[@i]" id="@Answers[i].Id"><input type="text" name="answersText" value="@Answers[i].Text"></label>
-            </div>
-        }
+       
     </div>
-    <input type="submit" />
-</form>
+
+    <input type="button" id="buttonForAdd" value="Добавить вариант ответа" class="btn btn-primary" onclick="addAnswer()" />
+    <input type="button" value="Отправить" class="btn btn-success" onclick="addQuestion()" />
+
+    <style>
+        .buttonForRemove {
+            margin-left: 5px;
+            margin-bottom: 4px;
+        }
+
+        .answersText {
+            margin-left: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+    let answersCount = 0;
+    let idCount = 0;
+    const MaxAnswersNumber = 5;
+    const MinimalAnswersNumber = 2;
+
+    function addFromBd() {
+
+        var model = @Json.Serialize(answersText);
+
+        let element = document.getElementById('options_container');
 
 
+
+        for (let i = 0; i < model.length; i++) {
+
+            let inpt = document.createElement('input');
+            let checkbox = document.createElement('input');
+            let br = document.createElement('br');
+            let buttonForRemove = document.createElement('input');
+            let div = document.createElement('div');
+
+
+            inpt.setAttribute('type', 'text');
+            inpt.setAttribute('class', 'answersText');
+            inpt.setAttribute('value', model[i]);
+            checkbox.setAttribute('type', 'checkbox');
+            checkbox.setAttribute('class', 'itTrue');
+            buttonForRemove.setAttribute('type', 'button');
+            buttonForRemove.setAttribute('value', 'X');
+            buttonForRemove.setAttribute('class', 'buttonForRemove btn btn-danger btn-sm');
+            buttonForRemove.setAttribute('onclick', 'RemoveAnswer(this)');
+            buttonForRemove.setAttribute('id', idCount);
+            div.setAttribute('id', 'div' + idCount);
+
+            element.appendChild(div);
+            div.appendChild(checkbox);
+            div.appendChild(inpt);
+            div.appendChild(buttonForRemove);
+            div.appendChild(br);
+            div.appendChild(br);
+
+            answersCount++;
+            idCount++;
+           
+            if (answersCount == MaxAnswersNumber) {
+                buttonForAdd.hidden = true;
+            }
+        }
+
+
+    }
+
+
+    function addAnswer() {
+        let element = document.getElementById('options_container');
+        let inpt = document.createElement('input');
+        let checkbox = document.createElement('input');
+        let br = document.createElement('br');
+        let buttonForAdd = document.getElementById('buttonForAdd');
+        let buttonForRemove = document.createElement('input');
+        let div = document.createElement('div');
+
+        inpt.setAttribute('type', 'text');
+        inpt.setAttribute('class', 'answersText');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.setAttribute('class', 'itTrue');
+        buttonForRemove.setAttribute('type', 'button');
+        buttonForRemove.setAttribute('value', 'X');
+        buttonForRemove.setAttribute('class', 'buttonForRemove btn btn-danger btn-sm');
+        buttonForRemove.setAttribute('onclick', 'RemoveAnswer(this)');
+        buttonForRemove.setAttribute('id', idCount);
+        div.setAttribute('id', 'div' + idCount);
+
+        element.appendChild(div);
+        div.appendChild(checkbox);
+        div.appendChild(inpt);
+        div.appendChild(buttonForRemove);
+        div.appendChild(br);
+        div.appendChild(br);
+
+
+        answersCount++;
+        idCount++;
+        if (answersCount == MaxAnswersNumber ){
+            buttonForAdd.hidden = true;
+        }
+
+    }
+
+    function RemoveAnswer(obj) {
+        let buttonForAdd = document.getElementById('buttonForAdd');
+        let divForRemove = document.getElementById('div' + obj.id);
+        divForRemove.remove();
+        buttonForAdd.hidden = false;
+        answersCount--;
+    }
+
+    function addQuestion() {
+        let someText = document.getElementsByName('questionText');
+        let questionText = someText[0].value;
+        let answersTextList = document.getElementsByClassName('answersText');
+        let answersCheckboxList = document.getElementsByClassName('itTrue');
+        var textMassive = new Array();
+        var checkboxValueMassive = new Array();
+        let isChecked = 0;
+
+        for (let i = 0; i < answersTextList.length; i++) {
+            textMassive[i] = answersTextList[i].value;
+            if (answersCheckboxList[i].checked) {
+                checkboxValueMassive[i] = true;
+                isChecked = 1;
+            }
+            else {
+                checkboxValueMassive[i] = false;
+            }
+        }
+        var id = @Json.Serialize(Model.SourceQuestion.Id);
+
+
+        if (questionText == '') {
+            alert("Введите текст вопроса");
+        }
+        else if (answersCount < MinimalAnswersNumber) {
+            alert("Вопрос должен иметь как минимум 2 варианта ответа");
+        }
+        else if (textMassive.includes('')) {
+            alert("Варианты ответа не должны быть пустыми");
+        }
+        else if (isChecked == 0) {
+            alert("Хотя бы один вариант ответа должен быть верным");
+        }
+        else {
+
+             var model = {
+                questionText: questionText,
+                textMassive: textMassive,
+                checkboxValueMassive: checkboxValueMassive,
+                id: id
+            }
+
+
+            $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditMultipleAnswerQuestion", "MultipleAnswerQuestion")",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            traditional: true,
+            success: function () {
+                    alert("Question is added");
+                    }
+            });
+        }
+
+    }
+
+
+    </script>
+</body>

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Teams.Models
 {
-    public class MAQDTOModel  //Вот моя DTO модель
+    public class MultipleAnswerQuestionDTOModel  
     {
         public string questionText { get; set; }
-        public string[] jTextList { get; set; }
-        public bool[] jCheckboxList { get; set; }
+        public string[] TextMassive { get; set; }
+        public bool[] CheckboxValueMassive { get; set; }
 
     }
 }

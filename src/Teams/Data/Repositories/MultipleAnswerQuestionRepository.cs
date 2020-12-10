@@ -19,7 +19,7 @@ namespace Teams.Data.Repositories
             return _db.MultipleAnswerQuestions.Include(a => a.Answers).Single(q => q.Id == Id);
         }
 
-        public void MethodForAdd(MultipleAnswerQuestion question)
+        public void AddQuestion(MultipleAnswerQuestion question)
         {
             _db.MultipleAnswerQuestions.Add(question);
             _db.SaveChanges();

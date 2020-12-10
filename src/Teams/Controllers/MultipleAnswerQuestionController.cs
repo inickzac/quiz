@@ -54,41 +54,31 @@ namespace Teams.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddMultipleAnswerQuestion([FromBody] MAQDTOModel fromAjax)
+        public IActionResult AddMultipleAnswerQuestion([FromBody] MultipleAnswerQuestionDTOModel fromAjax)
         {
             List<MultipleAnswerQuestionOption> allAnswers = new List<MultipleAnswerQuestionOption>();
-            for (int i = 0; i < fromAjax.jTextList.Length; i++)
+            for (int i = 0; i < fromAjax.TextMassive.Length; i++)
             {
-                allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.jTextList[i], fromAjax.jCheckboxList[i]));
+                allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.TextMassive[i], fromAjax.CheckboxValueMassive[i]));
             }
-            questionRepository.MethodForAdd(new MultipleAnswerQuestion(fromAjax.questionText, allAnswers));
+            questionRepository.AddQuestion(new MultipleAnswerQuestion(fromAjax.questionText, allAnswers));
 
-            return View(); 
-            
+            return RedirectToAction("Index", "Home");
+
         }
         [HttpPost]
-        public IActionResult EditMultipleAnswerQuestion( int[] editAnswers, string[] answersText, string questionText, Guid Id)
+        public IActionResult EditMultipleAnswerQuestion([FromBody] MultipleQuestionEditModel fromAjax)
         {
             List<MultipleAnswerQuestionOption> allAnswers = new List<MultipleAnswerQuestionOption>();
-            int g = 0;
-            bool isRight;
-            for (int i = 0; i < answersText.Length; i++)
+            for (int i = 0; i < fromAjax.TextMassive.Length; i++)
             {
-                if (editAnswers[g] == i)
-                {
-                    isRight = true;
-                    g++;
-                }
-                else
-                {
-                    isRight = false;
-                }
-                allAnswers.Add(new MultipleAnswerQuestionOption(answersText[i], isRight));
+                allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.TextMassive[i], fromAjax.CheckboxValueMassive[i]));
             }
-            MultipleAnswerQuestion question = questionRepository.PickById(Id);
-            question.UpdateQuestion(questionText, allAnswers);
+            MultipleAnswerQuestion question = questionRepository.PickById(fromAjax.id);
+            question.UpdateQuestion(fromAjax.questionText, allAnswers);
             questionRepository.SaveAllChanges();
-            return View();
+
+            return RedirectToAction("Index", "Home");
         }
 
     }
