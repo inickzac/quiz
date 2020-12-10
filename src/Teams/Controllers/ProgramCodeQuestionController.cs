@@ -20,9 +20,9 @@ namespace Teams.Controllers
             this.questionRepository = questionRepository;
         }
         [HttpGet]
-        public IActionResult Index(Guid id)
+        public async Task<IActionResult> Index(Guid id)
         {
-            var question = questionRepository.PickById(id);
+            var question = await questionRepository.PickByIdAsync(id);
             var model = new ProgramCodeQuestionViewModel()
             {
                 Id = question.Id,

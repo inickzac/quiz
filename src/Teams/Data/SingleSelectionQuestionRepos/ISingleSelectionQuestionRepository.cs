@@ -8,6 +8,6 @@ namespace Teams.Data.SingleSelectionQuestionRepos
 {
     public interface ISingleSelectionQuestionRepository
     {
-        SingleSelectionQuestion Get(Guid id);
+        Task<SingleSelectionQuestion> GetAsync(Guid id);
     }
 }

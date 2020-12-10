@@ -8,6 +8,6 @@ namespace Teams.Data.Repositories
 {
     public interface IProgramCodeQuestionRepository
     {
-        ProgramCodeQuestion PickById(Guid id);
+        Task<ProgramCodeQuestion> PickByIdAsync(Guid id);
     }
 }

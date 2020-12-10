@@ -15,13 +15,7 @@ namespace Teams.Data.TestRepos
         {
             _dbContext = dbContext;
         }
-        public List<Test> GetAll()
-        {
-            return _dbContext.Tests.ToList();
-        }
-        public Test Get(Guid id)
-        {
-            return _dbContext.Tests.Include(q => q.TestQuestions).FirstOrDefault(w => w.Id == id);
-        }
+        public async Task<List<Test>> GetAllAsync() => await _dbContext.Tests.ToListAsync();
+        public async Task<Test> GetAsync(Guid id) => await _dbContext.Tests.FindAsync(id);
     }
 }

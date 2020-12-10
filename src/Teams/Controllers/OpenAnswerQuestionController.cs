@@ -20,10 +20,10 @@ namespace Teams.Controllers
             this.context = context;
         }
 
-        public IActionResult Question(Guid id)
+        public async Task<IActionResult> Question(Guid id)
         {
 
-            var question = context.Get(id);                                
+            var question = await context.GetAsync(id);                                
             
             if(question == null) return NotFound();
 
@@ -37,9 +37,9 @@ namespace Teams.Controllers
         }
 
 
-        public IActionResult Answer(string answer, Guid id)
+        public async Task<IActionResult> Answer(string answer, Guid id)
         {
-            var question = context.Get(id);
+            var question = await context.GetAsync(id);
            
             OpenAnswerQuestionModel ivm = new OpenAnswerQuestionModel
             {

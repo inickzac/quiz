@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Teams.Domain;
 
 namespace Teams.Data.OpenAnswerQuestionRepos
@@ -13,9 +14,9 @@ namespace Teams.Data.OpenAnswerQuestionRepos
         {
             this.context = context;
         }
-        public OpenAnswerQuestion Get(Guid id)
+        public async Task<OpenAnswerQuestionAsync> GetAsync(Guid id)
         {
-            return context.OpenAnswerQuestions.FirstOrDefault(x => x.Id == id);
+            return await context.OpenAnswerQuestions.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

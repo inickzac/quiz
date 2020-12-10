@@ -8,7 +8,7 @@ namespace Teams.Data.QuestionRepos
 {
     public interface IQuestionRepository
     {
-        public List<Question> GetQuestions();
-        public List<Question> GetTestQuestions(Guid testId);
+        public Task<List<Question>> GetQuestionsAsync();
+        public Task<List<Question>> GetTestQuestionsAsync(Guid testId);
     }
 }

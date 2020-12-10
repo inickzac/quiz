@@ -9,7 +9,7 @@ namespace Teams.Data.TestRepos
 {
     public interface ITestRepository 
     {
-        public List<Test> GetAll();
-        public Test Get(Guid id);
+        public Task<List<Test>> GetAllAsync();
+        public Task<Test> GetAsync(Guid id);
     }
 }

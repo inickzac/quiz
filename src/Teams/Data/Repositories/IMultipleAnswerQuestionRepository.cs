@@ -8,6 +8,6 @@ namespace Teams.Data.Repositories
 {
     public interface IMultipleAnswerQuestionRepository
     {
-        MultipleAnswerQuestion PickById(Guid Id);
+        Task<MultipleAnswerQuestion> PickByIdAsync(Guid Id);
     }
 }

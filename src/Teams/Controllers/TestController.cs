@@ -24,9 +24,9 @@ namespace Teams.Controllers
             _questionRepository = questionRepository;
             _dbContext = dbContext;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_testRepository.GetAll());
+            return View(await _testRepository.GetAllAsync());
         }
         [HttpPost]
         public IActionResult Create([FromBody] string name)
@@ -37,9 +37,9 @@ namespace Teams.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            var test = _testRepository.Get(id);
+            var test = await _testRepository.GetAsync(id);
             if (test == null)
             {
                 return NotFound();
@@ -49,10 +49,8 @@ namespace Teams.Controllers
                 Id = test.Id,
                 Title = test.Title
             };
-            testDto.Questions = _questionRepository
-                .GetTestQuestions(id)
-                .Select(item => new QuestionDTO(item.Id, item.Text))
-                .ToList();
+            var questions = await _questionRepository.GetTestQuestionsAsync(id);
+            testDto.Questions = questions.Select(item => new QuestionDTO(item.Id, item.Text)).ToList();
             return View(testDto);
         }
         [HttpPost]
@@ -103,9 +101,9 @@ namespace Teams.Controllers
             }
             return PartialView("_EditPartial", test);
         }
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var test = _testRepository.Get(id);
+            var test = await _testRepository.GetAsync(id);
             if (test != null)
             {
                 _dbContext.Tests.Remove(test);

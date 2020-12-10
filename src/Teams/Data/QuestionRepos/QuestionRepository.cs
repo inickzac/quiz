@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Teams.Domain;
 
 namespace Teams.Data.QuestionRepos
@@ -13,13 +14,13 @@ namespace Teams.Data.QuestionRepos
         {
             _dbContext = dbContext;
         }
-        public List<Question> GetQuestions()
+        public async Task<List<Question>> GetQuestionsAsync()
         {
-            return _dbContext.Questions.ToList();
+            return await _dbContext.Questions.ToListAsync();
         }
-        public List<Question> GetTestQuestions(Guid testId)
+        public async Task<List<Question>> GetTestQuestionsAsync(Guid testId)
         {
-            return _dbContext.TestQuestions.Where(w => w.TestId == testId).Select(w => w.Question).ToList();
+            return await _dbContext.TestQuestions.Where(w => w.TestId == testId).Select(w => w.Question).ToListAsync();
         }
     }
 }

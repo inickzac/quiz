@@ -20,19 +20,19 @@ namespace Teams.Controllers
         }
         private readonly IMultipleAnswerQuestionRepository questionRepository;
         [HttpGet]
-        public IActionResult Index(Guid id)
+        public async Task<IActionResult> Index(Guid id)
         {
             var question = new MultipleAnswerQuestionViewModel()
             {
-                SourceQuestion = questionRepository.PickById(id)
+                SourceQuestion = await questionRepository.PickByIdAsync(id)
             };
             return View("MultipleAnswerQuestionForm", question);
         }
-        public IActionResult MultipleAnswerQuestionForm(string id, int[] answers)
+        public async Task<IActionResult> MultipleAnswerQuestionForm(string id, int[] answers)
         {
             var question = new MultipleAnswerQuestionViewModel()
             {
-                SourceQuestion = questionRepository.PickById(new Guid(id)),
+                SourceQuestion = await questionRepository.PickByIdAsync(new Guid(id)),
                 ChosenOptions = answers
             };
             return View(question);

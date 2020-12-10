@@ -14,9 +14,9 @@ namespace Teams.Data.Repositories
         {
             _db = db;
         }
-        public ProgramCodeQuestion PickById(Guid id)
+        public async Task<ProgramCodeQuestion> PickByIdAsync(Guid id)
         {
-            return _db.ProgramCodeQuestions.Single(q => q.Id == id);
+            return await _db.ProgramCodeQuestions.SingleAsync(q => q.Id == id);
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Teams.Data.SingleSelectionQuestionRepos
         {
             _dbContext = dbContext;
         }
-        public SingleSelectionQuestion Get(Guid id)
+        public async Task<SingleSelectionQuestion> GetAsync(Guid id)
         {
-            return _dbContext.SingleSelectionQuestions.Include(q => q.Options)
-               .FirstOrDefault(i => i.Id == id);
+            return await _dbContext.SingleSelectionQuestions.Include(q => q.Options)
+               .FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Teams.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            var list =  _questionRepository.GetQuestions();
+            var list =  _questionRepository.GetQuestionsAsync();
             return Json(list);
         }
     }

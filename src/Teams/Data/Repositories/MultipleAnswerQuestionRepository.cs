@@ -14,9 +14,9 @@ namespace Teams.Data.Repositories
         {
             _db = db;
         }
-        public MultipleAnswerQuestion PickById(Guid Id)
+        public async Task<MultipleAnswerQuestion> PickByIdAsync(Guid Id)
         {
-            return _db.MultipleAnswerQuestions.Include(a => a.Answers).Single(q => q.Id == Id);
+            return await _db.MultipleAnswerQuestions.Include(a => a.Answers).SingleAsync(q => q.Id == Id);
         }
     }
 }
