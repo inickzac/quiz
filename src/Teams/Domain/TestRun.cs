@@ -17,7 +17,6 @@ namespace Teams.Domain
         public List<Test> Tests {get; set;}
         public List<Answer> Answers {get; set;}
         public bool InProgress { get; set; }
-
         public int AnswersCounter { get; set; }
 
         public TestRun(ApplicationUser testedUser, Test test)
