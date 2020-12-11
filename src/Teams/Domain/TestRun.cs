@@ -14,7 +14,7 @@ namespace Teams.Domain
         public string TestedUserID { get; set; }
         public ApplicationUser TestedUser { get; set; }
         public Guid TestId { get; set; }
-        public List<Test> Tests {get; set;}
+        public Test Test {get; set;}
         public List<Answer> Answers {get; set;}
         public bool InProgress { get; set; }
 

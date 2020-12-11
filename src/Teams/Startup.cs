@@ -38,8 +38,7 @@ namespace Teams
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultUI().AddDefaultTokenProviders();
             services.AddScoped<IMultipleAnswerQuestionRepository, MultipleAnswerQuestionRepository>();
             services.AddScoped<IProgramCodeQuestionRepository, ProgramCodeQuestionRepository>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
@@ -49,6 +48,7 @@ namespace Teams
             services.AddScoped<IOpenAnswerQuestionRepository, OpenAnswerQuestionRepository>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<ITestRunRepository, TestRunRepository>();
+            //services.AddScoped<IApplicationUser, ApplicationUser>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp;
 using Teams.Domain.DTO_Models;
 
 namespace Teams.Controllers
@@ -17,37 +20,57 @@ namespace Teams.Controllers
     {
         private ITestRunRepository _testRunRepository;
         private ApplicationDbContext _applicationDbContext;
-        private readonly ApplicationUser _applicationUser;
+        private ApplicationUser _applicationUser;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private IAnswerRepository _answerRepository;
 
-        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, ApplicationUser applicationUser)
+        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager)
         {
             _testRunRepository = testRunRepository;
             _applicationDbContext = applicationDbContext;
-            _applicationUser = applicationUser;
+            _signInManager = signManager;
+            _userManager = userManager;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index(FormCollection inputText, Test test)
+        {
+            string answerText = inputText["answer_text"];
+            List<string> answerList;
+            _applicationUser = await _userManager.GetUserAsync(User);
+            TestRun testRun = await _testRunRepository.GetByTestIdAsync(test.Id) ?? new TestRun(_applicationUser, test);
+            if (testRun.InProgress)
+            {
+                List<TestQuestion> testQuestions = testRun.Test.TestQuestions.ToList();
+                int answersCount = 1;
+
+                if (testRun.InProgress)
+                {
+                    foreach (var question in testQuestions)
+                    {
+                        if (question.Question is MultipleAnswerQuestion tempQuestion)
+                        {
+                            answersCount = tempQuestion.Answers.Count;
+                        }
+                    }
+                }
+                return View(testRun, answersCount);
+            }
+
+            RedirectToAction("ShowUserTestRuns", _applicationUser.Id);
         }
         
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            List<TestRun> testRuns = await  _testRunRepository.GetAllByUserAsync(_applicationUser.Id); 
-            return View(testRuns);
-        }
-        [HttpGet]
-        public async Task<IActionResult> Index(string userId)
-        {
-            List<TestRun> testRuns = await  _testRunRepository.GetAllByUserAsync(userId); 
-            return View(testRuns);
-        }
-        [HttpGet]
-        public IActionResult Start(Guid testRunId, string userId)
-        {
-            if (_testRunRepository.GetAllAsync().Result.All(x => x.Id != testRunId))
-            {
-                return NotFound();
-            }
-            TestRun testRun = _testRunRepository.GetAllAsync().Result.FirstOrDefault(x => x.TestId == testRunId);
-            return View("Run", testRun);
-        }
+        //[HttpGet]
+        //public IActionResult Start(Guid testRunId, string userId)
+        //{
+        //    if (_testRunRepository.GetAllAsync().Result.All(x => x.Id != testRunId))
+        //    {
+        //        return NotFound();
+        //    }
+        //    TestRun testRun = _testRunRepository.GetAllAsync().Result.FirstOrDefault(x => x.TestId == testRunId);
+        //    return View("Run", testRun);
+        //}
 
         [HttpPost]
         private async Task<bool> Create(Guid testId)
@@ -57,13 +80,14 @@ namespace Teams.Controllers
             await SaveTestRun(testRun);
             return true;
         }
+
         [HttpPost]
         public async Task<IActionResult> AddAnswer(Answer answer, Guid testRunTd)
         {
             await _applicationDbContext.Answers.AddAsync(answer);
             await _applicationDbContext.SaveChangesAsync();
             _testRunRepository.GetByIdAsync(testRunTd).Result.AnswersCounter++;
-            return RedirectToAction("Start");
+            return RedirectToAction("Index");
         }
         
         [HttpPost]
