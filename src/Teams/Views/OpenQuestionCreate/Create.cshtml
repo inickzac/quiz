@@ -1,22 +1,40 @@
 ﻿@model Teams.Models.OpenAnswerQuestionModel
+@using Westwind.AspNetCore.Markdown
 @{
     ViewBag.Title = "Question creating";
 }
 
-<form asp-action="create" asp-controller="OpenQuestionCreate">
-    <div class="form-group">
-        <label asp-for="Question" class="control-label">Question text</label>
-        <textarea id="questionInput" type="text" asp-for="Question" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label asp-for="Answer" class="control-label">Answer text</label>
-        <input type="text" asp-for="Answer" class="form-control" />
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-light" />
-    </div>
-</form>
-<markdown-html-parser></markdown-html-parser>
-@section scripts {<markdown-script-parser id-text-area="questionInput"></markdown-script-parser>}
+@section scripts{
+    <script type="text/javascript">
+    function getMarkdownQuestion(quest) {
+        $.ajax({
+            url: '@Url.Action("GetMarkdownQuestion")',
+            type: "POST",
+            dataType: "json",
+            data: { Quest: quest },
+            success: function (owner) {
+            $("#OutQuestion divbody").remove();
+            $('#OutQuestion').append('<divbody><p>Parsed Question:</p> <p>' + owner + '</p></divbody>')
+            },
+        });
+    }
+    </script>
+}
+
+    <form asp-action="create" asp-controller="OpenQuestionCreate">
+        <div class="form-group">
+            <label asp-for="Question" class="control-label">Question text</label>
+            <textarea id="questionInput" type="text" asp-for="Question" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="Answer" class="control-label">Answer text</label>
+            <input type="text" asp-for="Answer" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-light" />
+        </div>
+    </form>
+
+<markdown-parser></markdown-parser>
 
 

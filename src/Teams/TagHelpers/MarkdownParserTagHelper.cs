@@ -7,26 +7,16 @@ using System.Threading.Tasks;
 
 namespace Teams.TagHelpers
 {
-    public class MarkdownHtmlParserTagHelper : TagHelper
+    public class MarkdownParserTagHelper : TagHelper
     {
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.Content.AppendHtml(new HtmlString
                 (
-                $"<form action='InfoMarkdown' controller='OpenQuestionCreate' class='Unique-Name-class'>" +
-                $"<input type = 'text' id='InfoMarkdown' name='questionMarkdown' hidden />" +
-                $"<input type = 'submit' value='Parse to Markdown' class='btn btn-light' />" +
-                $"</form>"
-                ));
-        }
-    }
-    public class MarkdownScriptParserTagHelper : TagHelper
-    {
-        public string IdTextArea { get; set; }
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            output.Content.AppendHtml(new HtmlString(
-                "<script>$('.Unique-Name-class').submit(function() { $('#InfoMarkdown').val($('#" + IdTextArea + "').val()); return true; });</script>"            
+                $"<form>" +
+                $"<input type=\"button\" value='Parse to Markdown' class='btn btn-light' onclick=\"getMarkdownQuestion(document.getElementById('questionInput').value)\"" +
+                $"</form>" +
+                $"<div id=\"OutQuestion\"></div>"
                 ));
         }
     }
