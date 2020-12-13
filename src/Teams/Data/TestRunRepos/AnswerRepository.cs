@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Teams.Domain;
 using Teams.Models;
 
@@ -15,14 +17,15 @@ namespace Teams.Data.TestRunRepos
             _applicationDbContext = applicationDbContext;
         }
 
-        public List<Answer> GetAll()
+        public async Task<List<Answer>> GetAllAsync()
         {
-            return _applicationDbContext.Answers.ToList();
+            return await _applicationDbContext.Answers.ToListAsync();
         }
 
-        public TestRun GetById(Guid id)
+        public async Task<Answer> GetByIdAsync(Guid id)
         {
-            return _applicationDbContext.Testrun.Find(id);
+            List<Answer> answers = await GetAllAsync();
+            return answers.FirstOrDefault(a => a.Id == id);
         }
     }
 }

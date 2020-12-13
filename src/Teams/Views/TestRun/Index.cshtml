@@ -1,21 +1,9 @@
-@model Teams.Domain.Question
+﻿@model object
 
 @{
-    ViewBag.Title = Model.Test.Title;
+    ViewBag.Title = "title";
     Layout = "_Layout";
 }
-@{List<string> answerText = new List<string>();}
-<table class="table" id="testrun">
-    @foreach (var ans in Model.TestQuestions.)
-    {
-        <tr>
-            <td>
-                @Html.Display(question.Question.Text)
-            </td>
-            <td><input type="text" id="answer_text" name="answer" /></td>
-        </tr>
-        <td><input type="submit" /></td>
-    }
-</table>
 
-}
+<h2>title</h2>
+<h3>Congratulations! Test Complete!</h3>

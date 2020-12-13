@@ -9,5 +9,7 @@ namespace Teams.Models
     public class AnswerViewModel : Entity
     {
         public List<string> AnswerTexts { get; set; }
+        public TestQuestion TestQuestion { get; set; }
+        public Guid TestRunGuid { get; set; }
     }
 }

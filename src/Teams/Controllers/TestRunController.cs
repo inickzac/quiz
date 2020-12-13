@@ -22,80 +22,51 @@ namespace Teams.Controllers
         private ApplicationDbContext _applicationDbContext;
         private ApplicationUser _applicationUser;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private IAnswerRepository _answerRepository;
 
-        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager)
+        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
             _testRunRepository = testRunRepository;
             _applicationDbContext = applicationDbContext;
-            _signInManager = signManager;
             _userManager = userManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(FormCollection inputText, Test test)
+        public async Task<ViewResult> Index(Guid testId)
         {
-            string answerText = inputText["answer_text"];
-            List<string> answerList;
             _applicationUser = await _userManager.GetUserAsync(User);
-            TestRun testRun = await _testRunRepository.GetByTestIdAsync(test.Id) ?? new TestRun(_applicationUser, test);
-            if (testRun.InProgress)
+            TestRun testRun = await _testRunRepository.GetByTestIdAsync(testId) ?? new TestRun(_applicationUser, _applicationDbContext.Tests.FirstOrDefault(x=> x.Id == testId));
+            foreach (var question in testRun.Test.TestQuestions)
             {
-                List<TestQuestion> testQuestions = testRun.Test.TestQuestions.ToList();
-                int answersCount = 1;
+                AnswerViewModel answerViewModel = new AnswerViewModel() {TestQuestion =  question, TestRunGuid = testRun.Id};
+                View("AddAnswer", answerViewModel);
+            }
+            
+            return View();
+        }
 
-                if (testRun.InProgress)
-                {
-                    foreach (var question in testQuestions)
-                    {
-                        if (question.Question is MultipleAnswerQuestion tempQuestion)
-                        {
-                            answersCount = tempQuestion.Answers.Count;
-                        }
-                    }
-                }
-                return View(testRun, answersCount);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async void AddAnswer(AnswerViewModel answerViewModel)
+        {
+            if (answerViewModel == null)
+            {
+                throw new Exception();
             }
 
-            RedirectToAction("ShowUserTestRuns", _applicationUser.Id);
-        }
-        
-        //[HttpGet]
-        //public IActionResult Start(Guid testRunId, string userId)
-        //{
-        //    if (_testRunRepository.GetAllAsync().Result.All(x => x.Id != testRunId))
-        //    {
-        //        return NotFound();
-        //    }
-        //    TestRun testRun = _testRunRepository.GetAllAsync().Result.FirstOrDefault(x => x.TestId == testRunId);
-        //    return View("Run", testRun);
-        //}
-
-        [HttpPost]
-        private async Task<bool> Create(Guid testId)
-        {
-            Test test = await _applicationDbContext.Tests.FindAsync(testId);
-            TestRun testRun = new TestRun(_applicationUser, test);
-            await SaveTestRun(testRun);
-            return true;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddAnswer(Answer answer, Guid testRunTd)
-        {
-            await _applicationDbContext.Answers.AddAsync(answer);
+            var currentTestRun = await _testRunRepository.GetByIdAsync(answerViewModel.TestRunGuid);
+            Answer  currentAnswer = new Answer();
+            currentAnswer.SetAnswer(answerViewModel.AnswerTexts);
+            currentAnswer.TestRun = await _testRunRepository.GetByIdAsync(currentTestRun.Id);
+            currentAnswer.TestRunFK = currentAnswer.Id;
+            await _applicationDbContext.Answers.AddAsync(currentAnswer);
+            _applicationDbContext.Testrun.Update(currentTestRun);
             await _applicationDbContext.SaveChangesAsync();
-            _testRunRepository.GetByIdAsync(testRunTd).Result.AnswersCounter++;
-            return RedirectToAction("Index");
         }
         
-        [HttpPost]
-        public async Task<IActionResult> Finish(TestRun testRun)
+        public async void Finish(TestRun testRun)
         {
             testRun.InProgress = false;
             await SaveTestRun(testRun);
-            return RedirectToAction("Index");
         }
 
         [Authorize]
@@ -109,7 +80,7 @@ namespace Teams.Controllers
         {
             try
             {
-                await _applicationDbContext.Testrun.AddAsync(testRun);
+                _applicationDbContext.Testrun.Update(testRun);
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
