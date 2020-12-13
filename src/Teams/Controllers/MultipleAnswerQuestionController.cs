@@ -14,9 +14,11 @@ namespace Teams.Controllers
 {
     public class MultipleAnswerQuestionController : Controller
     {
-        public MultipleAnswerQuestionController(IMultipleAnswerQuestionRepository questionRepository)
+        IApplicationDbContext _db;
+        public MultipleAnswerQuestionController(IMultipleAnswerQuestionRepository questionRepository, IApplicationDbContext db)
         {
             this.questionRepository = questionRepository;
+            _db = db;
         }
         private readonly IMultipleAnswerQuestionRepository questionRepository;
         [HttpGet]
@@ -43,7 +45,6 @@ namespace Teams.Controllers
             var question = new MultipleAnswerQuestionViewModel()
             {
                 SourceQuestion = questionRepository.PickById(id),
-                // ChosenOptions = answers
             };
             return View(question);
         }
@@ -61,7 +62,8 @@ namespace Teams.Controllers
             {
                 allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.TextMassive[i], fromAjax.CheckboxValueMassive[i]));
             }
-            questionRepository.AddQuestion(new MultipleAnswerQuestion(fromAjax.questionText, allAnswers));
+            questionRepository.AddQuestion(new MultipleAnswerQuestion(fromAjax.QuestionText, allAnswers));
+            _db.SaveChanges();
 
             return RedirectToAction("Index", "Home");
 
@@ -75,8 +77,8 @@ namespace Teams.Controllers
                 allAnswers.Add(new MultipleAnswerQuestionOption(fromAjax.TextMassive[i], fromAjax.CheckboxValueMassive[i]));
             }
             MultipleAnswerQuestion question = questionRepository.PickById(fromAjax.id);
-            question.UpdateQuestion(fromAjax.questionText, allAnswers);
-            questionRepository.SaveAllChanges();
+            question.UpdateQuestion(fromAjax.QuestionText, allAnswers);
+            _db.SaveChanges();
 
             return RedirectToAction("Index", "Home");
         }

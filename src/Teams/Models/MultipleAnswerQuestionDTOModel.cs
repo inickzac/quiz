@@ -7,7 +7,7 @@ namespace Teams.Models
 {
     public class MultipleAnswerQuestionDTOModel  
     {
-        public string questionText { get; set; }
+        public string QuestionText { get; set; }
         public string[] TextMassive { get; set; }
         public bool[] CheckboxValueMassive { get; set; }
 

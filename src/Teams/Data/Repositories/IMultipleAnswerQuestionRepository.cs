@@ -12,7 +12,6 @@ namespace Teams.Data.Repositories
 
         public void AddQuestion(MultipleAnswerQuestion question);
 
-        public void SaveAllChanges();
     }
 
 
