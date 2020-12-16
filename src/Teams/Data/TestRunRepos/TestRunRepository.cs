@@ -24,11 +24,6 @@ namespace Teams.Data.TestRunRepos
             return await _dbContext.Testrun.FindAsync(id);
         }
 
-        public async Task<TestRun> GetByTestIdAsync(Guid id)
-        {
-            return await _dbContext.Testrun.FirstOrDefaultAsync(x => x.Test.Id == id);
-        }
-
         public async Task<List<TestRun>> GetAllByUserAsync(string id)
         {
             List<TestRun> testRuns = await GetAllAsync();

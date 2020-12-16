@@ -21,48 +21,63 @@ namespace Teams.Controllers
         private ITestRunRepository _testRunRepository;
         private ApplicationDbContext _applicationDbContext;
         private ApplicationUser _applicationUser;
+        private AnswerRepository _answerRepository;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
+        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, AnswerRepository answerRepository)
         {
+            _answerRepository = answerRepository;
             _testRunRepository = testRunRepository;
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
         }
 
         [HttpGet]
-        public async Task<ViewResult> Index(Guid testId)
+        public async Task<IActionResult> Index(Guid TestRunId)
         {
             _applicationUser = await _userManager.GetUserAsync(User);
-            TestRun testRun = await _testRunRepository.GetByTestIdAsync(testId) ?? new TestRun(_applicationUser, _applicationDbContext.Tests.FirstOrDefault(x=> x.Id == testId));
-            foreach (var question in testRun.Test.TestQuestions)
+            TestRun testRun = await _testRunRepository.GetByIdAsync(TestRunId);
+            if (testRun == null) return NotFound();
+            Start(testRun);
+            TestRunDTO testRunDto = new TestRunDTO(testRun.Answers.Select(a => new AnswerDTO(a.AnswerValue, 
+                a.Id, a.TestQuestionId)).ToList(),  _applicationDbContext.TestQuestions.
+                Where(t=> testRun.TestQuestionIds.Contains(t.QuestionId)).ToList());
+            return View(testRunDto);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Index(TestRunDTO testRunDto)
+        {
+            var updatedTestRun = await _testRunRepository.GetByIdAsync(testRunDto.Id);
+            if (updatedTestRun == null) return NotFound();
+            foreach (var answer in testRunDto.Answers)
             {
-                AnswerViewModel answerViewModel = new AnswerViewModel() {TestQuestion =  question, TestRunGuid = testRun.Id};
-                View("AddAnswer", answerViewModel);
+                updatedTestRun.AnswerIds.Add(answer.Id);
             }
-            
+
+            await SaveTestRun(updatedTestRun);
+            return View(testRunDto);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(AnswerDTO answerDto)
+        {
+            if (answerDto == null) return NotFound();
+            Answer  currentAnswer = await _answerRepository.GetByIdAsync(answerDto.Id);
+            if (currentAnswer == null) return NotFound();
+            currentAnswer.SetAnswer(answerDto.AnswerValue);
+            _applicationDbContext.Answers.Update(currentAnswer);
+            await _applicationDbContext.SaveChangesAsync();
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async void AddAnswer(AnswerViewModel answerViewModel)
+        public async void Start(TestRun testRun)
         {
-            if (answerViewModel == null)
-            {
-                throw new Exception();
-            }
-
-            var currentTestRun = await _testRunRepository.GetByIdAsync(answerViewModel.TestRunGuid);
-            Answer  currentAnswer = new Answer();
-            currentAnswer.SetAnswer(answerViewModel.AnswerTexts);
-            currentAnswer.TestRun = await _testRunRepository.GetByIdAsync(currentTestRun.Id);
-            currentAnswer.TestRunFK = currentAnswer.Id;
-            await _applicationDbContext.Answers.AddAsync(currentAnswer);
-            _applicationDbContext.Testrun.Update(currentTestRun);
-            await _applicationDbContext.SaveChangesAsync();
+            testRun.InProgress = true;
+            await SaveTestRun(testRun);
         }
-        
+
         public async void Finish(TestRun testRun)
         {
             testRun.InProgress = false;

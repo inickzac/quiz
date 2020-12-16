@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teams.Domain;
 using Teams.Models;
 
@@ -21,6 +22,7 @@ namespace Teams.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<TestRun> Testrun { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<AnswerValue> AnswerValues { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -30,13 +32,14 @@ namespace Teams.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Answer>()
+            builder.Entity<AnswerValue>()
                 .Property(e => e.AnswerText)
                 .HasConversion(
                     v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
-            builder.Entity<TestRun>().HasOne(u => u.TestedUser).WithMany(e => e.TestsTaken).HasForeignKey(k => k.TestedUserID);
-            builder.Entity<TestRun>().HasMany(u => u.Answers).WithOne(e => e.TestRun).HasForeignKey(k => k.TestRunFK);
+            var guidToStringConverter = new GuidToStringConverter();
+            builder.Entity<TestRun>().HasMany(u => u.Answers);
+            builder.Entity<AnswerValue>().HasMany(a => a.AnswerText);
         }
     }
 }

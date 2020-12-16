@@ -9,24 +9,24 @@ namespace Teams.Domain
     /// </summary>
     public class TestRun : Entity
     {
-        
-        
-        public string TestedUserID { get; set; }
-        public ApplicationUser TestedUser { get; set; }
-        public Guid TestId { get; set; }
-        public Test Test {get; set;}
-        public List<Answer> Answers {get; set;}
+        public string TestedUserID { get; private set; }
+        public Guid TestId { get; private set; }
+        public List<Guid> TestQuestionIds { get; private set; }
+        public List<Guid> AnswerIds { get; private set; }
+        public List<Answer> Answers { get; private set; }
         public bool InProgress { get; set; }
 
-        public int AnswersCounter { get; set; }
-
-        public TestRun(ApplicationUser testedUser, Test test)
+        public TestRun(string testedUserId, Test test, List<Guid> testQuestionIds)
         {
-            TestedUserID = testedUser.Id;
-            TestedUser = testedUser;
+            TestedUserID = testedUserId;
             TestId = test.Id;
-            AnswersCounter = 0;
             InProgress = true;
+            TestQuestionIds = testQuestionIds;
+        }
+
+        public void AddAnswerId(Guid answerId)
+        {
+            AnswerIds.Add(answerId);
         }
 
         public TestRun()

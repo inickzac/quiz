@@ -14,5 +14,5 @@ namespace Teams.Domain.DTO_Models
         {
             Questions = new List<QuestionDTO>();
         }
-}
+    }
 }

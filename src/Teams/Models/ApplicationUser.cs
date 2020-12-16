@@ -9,7 +9,5 @@ namespace Teams.Models
 {
     public class ApplicationUser : IdentityUser, IApplicationUser
     {
-        public Guid TestsTakenId { get; set; }
-        public IEnumerable<TestRun> TestsTaken { get; set; }
     }
 }
