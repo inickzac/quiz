@@ -37,9 +37,7 @@ namespace Teams.Data
                 .HasConversion(
                     v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
-            var guidToStringConverter = new GuidToStringConverter();
             builder.Entity<TestRun>().HasMany(u => u.Answers);
-            builder.Entity<AnswerValue>().HasMany(a => a.AnswerText);
         }
     }
 }

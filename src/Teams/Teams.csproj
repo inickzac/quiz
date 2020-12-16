@@ -20,6 +20,8 @@
     <Compile Remove="Data\Migrations\20201204101042_AddTestRunEntity.Designer.cs" />
     <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.cs" />
     <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201216165459_AddTestRunEntity.cs" />
+    <Compile Remove="Data\Migrations\20201216165459_AddTestRunEntity.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\ProgramCodeQuestion\ProgramCodeQuestionCheks.ts" />
@@ -39,5 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Migrations\TestRunRepos\" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Delete\Index.cshtml" />
   </ItemGroup>
 </Project>

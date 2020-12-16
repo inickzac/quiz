@@ -1,28 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Teams.Domain
 {
     /// <summary>
-    /// Class Answer contains answers to current Test question. Answer is stored as List strings.
+    ///     Class Answer contains answers to current Test question. Answer is stored as List strings.
     /// </summary>
     public class Answer : Entity
     {
         public AnswerValue AnswerValue { get; private set; }
-        public Guid TestQuestionId { get; private set; }
-        public Guid TestRunId { get; private set; }
-
+        public Guid TestQuestionId { get; }
+        
         public Answer()
         {
         }
 
-        public Answer(AnswerValue answerValue, Guid testQuestionId, Guid testRunId)
+        public Answer(AnswerValue answerValue, Guid testQuestionId)
         {
             AnswerValue = answerValue;
             TestQuestionId = testQuestionId;
-            TestRunId = testRunId;
         }
 
         public void SetAnswer(AnswerValue answerValue)
@@ -39,7 +36,7 @@ namespace Teams.Domain
         {
             AnswerValue.AddAnswer(answers, false);
         }
-        
+
         public void SetAnswer(Guid answerId)
         {
             AnswerValue.AddAnswer(answerId.ToString(), true);
@@ -47,7 +44,7 @@ namespace Teams.Domain
 
         public void SetAnswer(List<Guid> answerIds)
         {
-            AnswerValue.AddAnswer(answerIds.Select(x=> x.ToString()).ToList(), true);
+            AnswerValue.AddAnswer(answerIds.Select(x => x.ToString()).ToList(), true);
         }
     }
 }

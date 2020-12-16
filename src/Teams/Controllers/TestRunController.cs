@@ -1,18 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Teams.Data;
-using Teams.Data.TestRepos;
 using Teams.Data.TestRunRepos;
 using Teams.Domain;
 using Teams.Models;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp;
-using Teams.Domain.DTO_Models;
 
 namespace Teams.Controllers
 {
@@ -20,11 +15,10 @@ namespace Teams.Controllers
     {
         private ITestRunRepository _testRunRepository;
         private ApplicationDbContext _applicationDbContext;
-        private ApplicationUser _applicationUser;
-        private AnswerRepository _answerRepository;
+        private IAnswerRepository _answerRepository;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, AnswerRepository answerRepository)
+        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, IAnswerRepository answerRepository)
         {
             _answerRepository = answerRepository;
             _testRunRepository = testRunRepository;
@@ -33,15 +27,15 @@ namespace Teams.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(Guid TestRunId)
+        public async Task<IActionResult> Index(Guid testRunId)
         {
-            _applicationUser = await _userManager.GetUserAsync(User);
-            TestRun testRun = await _testRunRepository.GetByIdAsync(TestRunId);
+            var testRun = await _testRunRepository.GetByIdAsync(testRunId);
             if (testRun == null) return NotFound();
+            var testQuestions =
+                _applicationDbContext.TestQuestions.Where(q => q.TestId == testRun.TestId).ToList();
             Start(testRun);
-            TestRunDTO testRunDto = new TestRunDTO(testRun.Answers.Select(a => new AnswerDTO(a.AnswerValue, 
-                a.Id, a.TestQuestionId)).ToList(),  _applicationDbContext.TestQuestions.
-                Where(t=> testRun.TestQuestionIds.Contains(t.QuestionId)).ToList());
+            var testRunDto = new TestRunDTO(testRun.Answers.Select(a => new AnswerDTO(a.AnswerValue, 
+                a.Id, testRunId, a.TestQuestionId)).ToList(),  testQuestions);
             return View(testRunDto);
         }
         
@@ -52,19 +46,20 @@ namespace Teams.Controllers
             if (updatedTestRun == null) return NotFound();
             foreach (var answer in testRunDto.Answers)
             {
-                updatedTestRun.AnswerIds.Add(answer.Id);
+                updatedTestRun.Answers.Add(await _answerRepository.GetByIdAsync(answer.Id));
             }
 
-            await SaveTestRun(updatedTestRun);
+            Finish(updatedTestRun);
             return View(testRunDto);
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(AnswerDTO answerDto)
+        public async Task<IActionResult> AddAnswer(AnswerDTO answerDto)
         {
             if (answerDto == null) return NotFound();
-            Answer  currentAnswer = await _answerRepository.GetByIdAsync(answerDto.Id);
+            var answer = new Answer(answerDto.AnswerValue, answerDto.TestQuestionId);
+            var  currentAnswer = await _answerRepository.GetByIdAsync(answerDto.Id);
             if (currentAnswer == null) return NotFound();
             currentAnswer.SetAnswer(answerDto.AnswerValue);
             _applicationDbContext.Answers.Update(currentAnswer);
@@ -82,13 +77,6 @@ namespace Teams.Controllers
         {
             testRun.InProgress = false;
             await SaveTestRun(testRun);
-        }
-
-        [Authorize]
-        public async Task<IActionResult> ShowUserTestRuns(string userId)
-        {
-            var testRuns = await _testRunRepository.GetAllByUserAsync(userId);
-            return RedirectToAction("Index");
         }
 
         private async Task<bool> SaveTestRun(TestRun testRun)

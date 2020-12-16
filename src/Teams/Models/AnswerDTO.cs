@@ -11,17 +11,19 @@ namespace Teams.Models
         public Guid Id { get; set; }
         public AnswerValue AnswerValue { get; set; }
         public Guid TestRunId { get; set; }
+        public Guid TestQuestionId { get; set; }
 
         public AnswerDTO()
         {
             Id = Guid.NewGuid();
         }
 
-        public AnswerDTO(AnswerValue answerValue, Guid id, Guid testRunId)
+        public AnswerDTO(AnswerValue answerValue, Guid id, Guid testRunId, Guid testQuestionId)
         {
             Id = id;
             AnswerValue = answerValue;
             TestRunId = testRunId;
+            TestQuestionId = testQuestionId;
         }
     }
 }

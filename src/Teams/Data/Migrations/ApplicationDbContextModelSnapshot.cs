@@ -160,17 +160,33 @@ namespace Teams.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AnswerText")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("AnswerValueId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TestRunFK")
+                    b.Property<Guid?>("TestRunId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestRunFK");
+                    b.HasIndex("AnswerValueId");
+
+                    b.HasIndex("TestRunId");
 
                     b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("Teams.Domain.AnswerValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AnswerValues");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestionOption", b =>
@@ -243,15 +259,10 @@ namespace Teams.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TestRunId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TestRunId");
 
                     b.ToTable("Tests");
                 });
@@ -283,21 +294,10 @@ namespace Teams.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AnswersCounter")
-                        .HasColumnType("int");
-
                     b.Property<bool>("InProgress")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TestedUserID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TestedUserID");
 
                     b.ToTable("Testrun");
                 });
@@ -346,9 +346,6 @@ namespace Teams.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("TestsTakenId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -454,11 +451,13 @@ namespace Teams.Data.Migrations
 
             modelBuilder.Entity("Teams.Domain.Answer", b =>
                 {
-                    b.HasOne("Teams.Domain.TestRun", "TestRun")
+                    b.HasOne("Teams.Domain.AnswerValue", "AnswerValue")
+                        .WithMany()
+                        .HasForeignKey("AnswerValueId");
+
+                    b.HasOne("Teams.Domain.TestRun", null)
                         .WithMany("Answers")
-                        .HasForeignKey("TestRunFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TestRunId");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestionOption", b =>
@@ -475,13 +474,6 @@ namespace Teams.Data.Migrations
                         .HasForeignKey("SingleSelectionQuestionId");
                 });
 
-            modelBuilder.Entity("Teams.Domain.Test", b =>
-                {
-                    b.HasOne("Teams.Domain.TestRun", null)
-                        .WithMany("Tests")
-                        .HasForeignKey("TestRunId");
-                });
-
             modelBuilder.Entity("Teams.Domain.TestQuestion", b =>
                 {
                     b.HasOne("Teams.Domain.Question", "Question")
@@ -495,13 +487,6 @@ namespace Teams.Data.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Teams.Domain.TestRun", b =>
-                {
-                    b.HasOne("Teams.Models.ApplicationUser", "TestedUser")
-                        .WithMany("TestsTaken")
-                        .HasForeignKey("TestedUserID");
                 });
 #pragma warning restore 612, 618
         }
