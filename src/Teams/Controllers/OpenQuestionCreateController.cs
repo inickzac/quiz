@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Teams.Data;
 using Teams.Domain;
 using Teams.Models;
-using Westwind.AspNetCore.Markdown;
 
 namespace Teams.Controllers
 {
@@ -58,13 +57,6 @@ namespace Teams.Controllers
             question.UpdateQuestion(modelForView.Question, modelForView.Answer);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
-        }
-
-        [HttpPost]
-        public JsonResult GetMarkdownQuestion(string Quest)
-        {
-            string html = Markdown.Parse(Quest);
-            return Json(html);
         }
     }
 }

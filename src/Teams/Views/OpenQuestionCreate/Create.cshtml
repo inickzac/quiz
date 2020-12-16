@@ -1,24 +1,6 @@
 ﻿@model Teams.Models.OpenAnswerQuestionModel
-@using Westwind.AspNetCore.Markdown
 @{
     ViewBag.Title = "Question creating";
-}
-
-@section scripts{
-    <script type="text/javascript">
-    function getMarkdownQuestion(quest) {
-        $.ajax({
-            url: '@Url.Action("GetMarkdownQuestion")',
-            type: "POST",
-            dataType: "json",
-            data: { Quest: quest },
-            success: function (owner) {
-            $("#OutQuestion divbody").remove();
-            $('#OutQuestion').append('<divbody><p>Parsed Question:</p> <p>' + owner + '</p></divbody>')
-            },
-        });
-    }
-    </script>
 }
 
     <form asp-action="create" asp-controller="OpenQuestionCreate">
@@ -34,7 +16,4 @@
             <input type="submit" value="Submit" class="btn btn-light" />
         </div>
     </form>
-
-<markdown-parser></markdown-parser>
-
-
+@await Component.InvokeAsync("MarkdownScriptForm", new {questId = "questionInput" })

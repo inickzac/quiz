@@ -16,7 +16,6 @@ using Teams.Data.SingleSelectionQuestionRepos;
 using Teams.Data.TestRepos;
 using Teams.Data.QuestionRepos;
 using Teams.Data.Repositories;
-using Teams.Data.SingleSelectionQuestionRepos;
 using Teams.Data.OpenAnswerQuestionRepos;
 
 namespace Teams
