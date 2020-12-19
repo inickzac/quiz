@@ -9,10 +9,10 @@ namespace Teams.ViewComponents
     public class MarkdownScriptFormViewComponent : ViewComponent
     {
 
-        public async Task<IViewComponentResult> InvokeAsync(string questId)
+        public IViewComponentResult Invoke(string questionId)
         {
-            ViewData["TextQuestId"] = questId;
-            return View();
+            ViewData["TextQuestionId"] = questionId;
+            return  View();
         }
 
     }

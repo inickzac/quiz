@@ -6,9 +6,9 @@ namespace Teams.Controllers
     public class MarkParserController : Controller
     {
         [HttpPost]
-        public JsonResult GetMarkdownQuestion(string Quest)
+        public JsonResult GetMarkdownQuestion(string question)
         {
-            string html = Markdown.Parse(Quest);
+            string html = Markdown.Parse(question);
             return Json(html);
         }
     }

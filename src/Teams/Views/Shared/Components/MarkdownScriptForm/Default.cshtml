@@ -1,24 +1,22 @@
-﻿
-<script src="~/lib/jquery/dist/jquery.js"></script>
+﻿<script type="text/javascript">
 
-<script type="text/javascript">
+        function getMarkdownQuestion(textQuestion) {             
+            $.ajax({
+                url: "/MarkParser/GetMarkdownQuestion",
+                type: "POST",
+                dataType: 'json',
+                data: { question: textQuestion },
+                success: function (parsedQuestion) {
+                    $("#OutQuestion divbody").remove();
+                    $('#OutQuestion').append('<divbody><p>Parsed Question:</p> <p>' + parsedQuestion + '</p></divbody>')
+                },
+            });
+        }
 
-        function getMarkdownQuestion(quest) {         
-        $.ajax({
-            url: "/MarkParser/GetMarkdownQuestion",
-            type: "POST",
-            dataType: 'json',
-            data: { Quest: quest },
-            success: function (owner) {
-            $("#OutQuestion divbody").remove();
-            $('#OutQuestion').append('<divbody><p>Parsed Question:</p> <p>' + owner + '</p></divbody>')
-            },
-        });
-    }
 </script>
 
 
 <form>
-    <input type="button" value='Parse to Markdown' class='btn btn-light' onclick="getMarkdownQuestion(document.getElementById('@ViewData["TextQuestId"]').value)" />
+    <input type="button" value='Parse to Markdown' class='btn btn-light' onclick="getMarkdownQuestion(document.getElementById('@ViewData["TextQuestionId"]').value)" />
 </form>
 <div id="OutQuestion"></div>
