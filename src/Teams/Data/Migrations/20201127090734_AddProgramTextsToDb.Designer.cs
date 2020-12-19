@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teams.Data;
 
 namespace Teams.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201127090734_AddProgramTextsToDb")]
+    partial class AddProgramTextsToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,11 +285,10 @@ namespace Teams.Data.Migrations
                     b.ToTable("SingleSelectionQuestionOption");
                 });
 
-            modelBuilder.Entity("Teams.Models.QueuedProgram", b =>
+            modelBuilder.Entity("Teams.Models.ProgramTextModel", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("Id")
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -302,43 +303,10 @@ namespace Teams.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnName("status")
                         .HasColumnType("int");
-                        
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-                    
-                    b.ToTable("QueuedPrograms");   
-                });       
-                
-            modelBuilder.Entity("Teams.Domain.Test", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
-                });
-
-            modelBuilder.Entity("Teams.Domain.TestQuestion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("TestQuestions");
+                    b.ToTable("Queue");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestion", b =>
@@ -435,29 +403,6 @@ namespace Teams.Data.Migrations
                     b.HasOne("Teams.Domain.SingleSelectionQuestion", null)
                         .WithMany("Options")
                         .HasForeignKey("SingleSelectionQuestionId");
-                });
-
-            modelBuilder.Entity("Teams.Models.QueuedProgram", b =>
-                {
-                    b.HasOne("Teams.Domain.ProgramCodeQuestion", null)
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });                        
-            modelBuilder.Entity("Teams.Domain.TestQuestion", b =>
-                {
-                    b.HasOne("Teams.Domain.Question", "Question")
-                        .WithMany("TestQuestions")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Teams.Domain.Test", "Test")
-                        .WithMany("TestQuestions")
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -16,6 +16,8 @@
     <Compile Remove="Data\Migrations\20200930114954_AddMultipleAnswerQuestionOptions.Designer.cs" />
     <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.cs" />
     <Compile Remove="Data\Migrations\20201102135014_AddProgramCodeQuestion.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201202124242_RenameAsQueuedProgram.cs" />
+    <Compile Remove="Data\Migrations\20201202124242_RenameAsQueuedProgram.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.3">

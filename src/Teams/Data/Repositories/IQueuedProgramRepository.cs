@@ -6,9 +6,8 @@ using Teams.Domain;
 
 namespace Teams.Data.Repositories
 {
-    public interface IProgramCodeQuestionRepository
+    public interface IQueuedProgramRepository
     {
-        ProgramCodeQuestion PickById(Guid id);
-        void Add(ProgramCodeQuestion question);
+        void Add(Guid id, string text);
     }
 }

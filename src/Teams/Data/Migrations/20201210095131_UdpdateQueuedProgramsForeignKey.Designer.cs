@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Teams.Data;
 
 namespace Teams.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201210095131_UdpdateQueuedProgramsForeignKey")]
+    partial class UdpdateQueuedProgramsForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,43 +304,12 @@ namespace Teams.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnName("status")
                         .HasColumnType("int");
-                        
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
-                    
-                    b.ToTable("QueuedPrograms");   
-                });       
-                
-            modelBuilder.Entity("Teams.Domain.Test", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tests");
-                });
-
-            modelBuilder.Entity("Teams.Domain.TestQuestion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("TestQuestions");
+                    b.ToTable("QueuedPrograms");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestion", b =>
@@ -442,20 +413,6 @@ namespace Teams.Data.Migrations
                     b.HasOne("Teams.Domain.ProgramCodeQuestion", null)
                         .WithMany()
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });                        
-            modelBuilder.Entity("Teams.Domain.TestQuestion", b =>
-                {
-                    b.HasOne("Teams.Domain.Question", "Question")
-                        .WithMany("TestQuestions")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Teams.Domain.Test", "Test")
-                        .WithMany("TestQuestions")
-                        .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
