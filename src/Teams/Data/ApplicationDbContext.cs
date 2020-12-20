@@ -20,10 +20,9 @@ namespace Teams.Data
         public DbSet<TestQuestion> TestQuestions { get; set; }
         public DbSet<ProgramCodeQuestion> ProgramCodeQuestions { get; set; }
         public DbSet<Answer> Answers { get; set; }
-        public DbSet<TestRun> Testrun { get; set; }
+        public DbSet<TestRun> TestRuns { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<AnswerValue> AnswerValues { get; set; }
-
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -32,12 +31,25 @@ namespace Teams.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<AnswerValue>()
-                .Property(e => e.AnswerText)
-                .HasConversion(
-                    v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
-            builder.Entity<TestRun>().HasMany(u => u.Answers);
+            builder.Entity<TestRun>(
+                b =>
+                {
+                    b.Property(e => e.TestedUserId);
+                    b.Property(e => e.TestId);
+                    b.HasMany(x => x.Answers).WithOne().IsRequired().HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.Cascade);
+                    b.Metadata.FindNavigation("Answers").SetPropertyAccessMode(PropertyAccessMode.Field);
+                });
+            builder.Entity<Answer>(
+                b =>
+                {
+                    b.Property(e => e.AnswerText);
+                    b.Property(e => e.AnswerOptions).HasConversion(
+                        v => string.Join(',', v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+                    //b.Property(e => e.Answers);
+                    //b.HasMany(x => x.Answers).WithOne().IsRequired().HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.Cascade);
+                    //b.Metadata.FindNavigation("Answers").SetPropertyAccessMode(PropertyAccessMode.Field);
+                });
         }
     }
 }

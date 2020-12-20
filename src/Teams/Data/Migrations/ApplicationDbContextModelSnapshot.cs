@@ -157,36 +157,17 @@ namespace Teams.Data.Migrations
             modelBuilder.Entity("Teams.Domain.Answer", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AnswerValueId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("TestRunId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerValueId");
-
-                    b.HasIndex("TestRunId");
-
-                    b.ToTable("Answers");
-                });
-
-            modelBuilder.Entity("Teams.Domain.AnswerValue", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("AnswerOptions")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AnswerText")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnswerValues");
+                    b.ToTable("Answers");
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestionOption", b =>
@@ -297,9 +278,15 @@ namespace Teams.Data.Migrations
                     b.Property<bool>("InProgress")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TestedUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Testrun");
+                    b.ToTable("TestRuns");
                 });
 
             modelBuilder.Entity("Teams.Models.ApplicationUser", b =>
@@ -451,13 +438,11 @@ namespace Teams.Data.Migrations
 
             modelBuilder.Entity("Teams.Domain.Answer", b =>
                 {
-                    b.HasOne("Teams.Domain.AnswerValue", "AnswerValue")
-                        .WithMany()
-                        .HasForeignKey("AnswerValueId");
-
                     b.HasOne("Teams.Domain.TestRun", null)
                         .WithMany("Answers")
-                        .HasForeignKey("TestRunId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Teams.Domain.MultipleAnswerQuestionOption", b =>

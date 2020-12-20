@@ -17,11 +17,11 @@ namespace Teams.Data.TestRunRepos
             _dbContext = dbContext;
         }
 
-        public async Task<List<TestRun>> GetAllAsync() => await _dbContext.Testrun.ToListAsync();
+        public async Task<List<TestRun>> GetAllAsync() => await _dbContext.TestRuns.ToListAsync();
 
         public async Task<TestRun> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Testrun.FindAsync(id);
+            return await _dbContext.TestRuns.FindAsync(id);
         }
 
         public async Task<List<TestRun>> GetAllByUserAsync(string id)

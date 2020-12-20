@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Teams.Data;
 using Teams.Data.TestRunRepos;
@@ -6,7 +7,6 @@ using Teams.Domain;
 using Teams.Models;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace Teams.Controllers
@@ -15,75 +15,75 @@ namespace Teams.Controllers
     {
         private ITestRunRepository _testRunRepository;
         private ApplicationDbContext _applicationDbContext;
-        private IAnswerRepository _answerRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private ApplicationUser _applicationUser;
 
-        public TestRunController(ITestRunRepository testRunRepository, ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager, IAnswerRepository answerRepository)
+        public TestRunController(ITestRunRepository testRunRepository,
+            ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager,
+            IAnswerRepository answerRepository)
         {
-            _answerRepository = answerRepository;
             _testRunRepository = testRunRepository;
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(Guid testRunId)
+        public async Task<IActionResult> Index()
+        {
+            _applicationUser = await _userManager.GetUserAsync(User);
+            return View(await _testRunRepository.GetAllAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Run(Guid testRunId)
         {
             var testRun = await _testRunRepository.GetByIdAsync(testRunId);
+
             if (testRun == null) return NotFound();
-            var testQuestions =
-                _applicationDbContext.TestQuestions.Where(q => q.TestId == testRun.TestId).ToList();
-            Start(testRun);
-            var testRunDto = new TestRunDTO(testRun.Answers.Select(a => new AnswerDTO(a.AnswerValue, 
-                a.Id, testRunId, a.TestQuestionId)).ToList(),  testQuestions);
+
+            var testQuestionIds =
+                _applicationDbContext.TestQuestions.Where(q => q.TestId == testRun.TestId).Select(x => x.Id).ToList();
+
+            var answers =
+                AnswerDTOConverter(
+                    _applicationDbContext.Answers.Where(x => testQuestionIds.Contains(x.TestQuestionId)).ToList(),
+                    testRun);
+            var testRunDto = new TestRunDTO(answers,
+                _applicationDbContext.TestQuestions.Where(x => testQuestionIds.Contains(x.Id)).ToList(),
+                testRun.TestId);
             return View(testRunDto);
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> Index(TestRunDTO testRunDto)
+        public async Task<IActionResult> Run(TestRunDTO testRunDto)
         {
             var updatedTestRun = await _testRunRepository.GetByIdAsync(testRunDto.Id);
             if (updatedTestRun == null) return NotFound();
+            var answers = new List<Answer>();
             foreach (var answer in testRunDto.Answers)
-            {
-                updatedTestRun.Answers.Add(await _answerRepository.GetByIdAsync(answer.Id));
-            }
-
-            Finish(updatedTestRun);
+                    answers.Add(new Answer(answer.AnswerText, answer.AnswerOptions.ToList(), answer.TestQuestionId, answer.Id));
+            var testRun = new TestRun(_applicationUser.Id, testRunDto.TestId, answers);
+            updatedTestRun.Finish();
+            await SaveTestRun(updatedTestRun);
             return View(testRunDto);
         }
-        
+
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddAnswer(AnswerDTO answerDto)
         {
             if (answerDto == null) return NotFound();
-            var answer = new Answer(answerDto.AnswerValue, answerDto.TestQuestionId);
-            var  currentAnswer = await _answerRepository.GetByIdAsync(answerDto.Id);
-            if (currentAnswer == null) return NotFound();
-            currentAnswer.SetAnswer(answerDto.AnswerValue);
+            Answer currentAnswer = new Answer(answerDto.AnswerText, answerDto.AnswerOptions.ToList(), answerDto.TestQuestionId, answerDto.Id);
             _applicationDbContext.Answers.Update(currentAnswer);
             await _applicationDbContext.SaveChangesAsync();
             return View();
-        }
-
-        public async void Start(TestRun testRun)
-        {
-            testRun.InProgress = true;
-            await SaveTestRun(testRun);
-        }
-
-        public async void Finish(TestRun testRun)
-        {
-            testRun.InProgress = false;
-            await SaveTestRun(testRun);
         }
 
         private async Task<bool> SaveTestRun(TestRun testRun)
         {
             try
             {
-                _applicationDbContext.Testrun.Update(testRun);
+                _applicationDbContext.TestRuns.Update(testRun);
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
@@ -91,6 +91,16 @@ namespace Teams.Controllers
             {
                 return false;
             }
+        }
+
+        private List<AnswerDTO> AnswerDTOConverter(List<Answer> answers, TestRun testRun)
+        {
+            var answerDTO = new List<AnswerDTO>();
+            foreach (var answer in answers)
+                answerDTO.Add(
+                    new AnswerDTO(answer.AnswerOptions.ToList(), answer.AnswerText, answer.Id, testRun.Id, answer.TestQuestionId));
+
+            return answerDTO;
         }
     }
 }

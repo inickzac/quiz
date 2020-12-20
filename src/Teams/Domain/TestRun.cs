@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Teams.Domain
 {
-    /// <summary>
-    ///     The entity keeps track of a test run for a specific user. Contains the IDs for the current user and of the Test.
-    /// </summary>
     public class TestRun : Entity
     {
         public string TestedUserId { get; }
         public Guid TestId { get; }
-        public List<Answer> Answers { get; private set; }
-        public bool InProgress { get; set; }
+        public IReadOnlyCollection<Answer> Answers => _answers.AsReadOnly();
+        private readonly List<Answer> _answers;
+        public bool InProgress { get; private set; }
         
-        public TestRun(string testedUserId, Test test, List<Guid> testQuestionIds)
+        public TestRun(string testedUserId, Guid testId, List<Answer> answers)
         {
             TestedUserId = testedUserId;
-            TestId = test.Id;
+            TestId = testId;
             InProgress = true;
+            _answers = answers;
         }
 
         public TestRun()
         {
+        }
+
+        public void Finish()
+        {
+            InProgress = false;
         }
     }
 }

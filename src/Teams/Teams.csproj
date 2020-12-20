@@ -22,6 +22,16 @@
     <Compile Remove="Data\Migrations\20201204101950_AddedTestRun.Designer.cs" />
     <Compile Remove="Data\Migrations\20201216165459_AddTestRunEntity.cs" />
     <Compile Remove="Data\Migrations\20201216165459_AddTestRunEntity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201220193512_AddTestRunTable.cs" />
+    <Compile Remove="Data\Migrations\20201220193512_AddTestRunTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201220194008_AddedTestRun2.cs" />
+    <Compile Remove="Data\Migrations\20201220194008_AddedTestRun2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201220194353_AddTestRun2.cs" />
+    <Compile Remove="Data\Migrations\20201220194353_AddTestRun2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201220195137_AddTestRun.cs" />
+    <Compile Remove="Data\Migrations\20201220195137_AddTestRun.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201220202758_AddTestRunTable.cs" />
+    <Compile Remove="Data\Migrations\20201220202758_AddTestRunTable.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\ProgramCodeQuestion\ProgramCodeQuestionCheks.ts" />

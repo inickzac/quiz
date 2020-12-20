@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Teams.Domain;
 
 namespace Teams.Models
 {
-    public class AnswerDTO 
+    public class AnswerDTO
     {
         public Guid Id { get; set; }
-        public AnswerValue AnswerValue { get; set; }
+        public ICollection<Guid> AnswerOptions { get; set; }
+        public string AnswerText { get; set; }
         public Guid TestRunId { get; set; }
         public Guid TestQuestionId { get; set; }
 
@@ -18,10 +16,11 @@ namespace Teams.Models
             Id = Guid.NewGuid();
         }
 
-        public AnswerDTO(AnswerValue answerValue, Guid id, Guid testRunId, Guid testQuestionId)
+        public AnswerDTO(List<string> answers, string answer, Guid id, Guid testRunId, Guid testQuestionId)
         {
+            AnswerText = answer;
             Id = id;
-            AnswerValue = answerValue;
+            foreach (var a in answers) AnswerOptions.Add(new Guid(a));
             TestRunId = testRunId;
             TestQuestionId = testQuestionId;
         }
